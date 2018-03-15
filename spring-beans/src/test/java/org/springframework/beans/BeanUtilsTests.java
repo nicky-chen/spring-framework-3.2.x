@@ -46,7 +46,7 @@ public final class BeanUtilsTests {
 
 	@Test
 	public void testInstantiateClass() {
-		// give proper class
+		// give proper class  ddd
 		BeanUtils.instantiateClass(ArrayList.class);
 
 		try {
