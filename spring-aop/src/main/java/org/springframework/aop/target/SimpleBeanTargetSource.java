@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package org.springframework.asm.util;
-
-import java.io.PrintWriter;
-
-import org.springframework.asm.ClassVisitor;
-//import org.objectweb.asm.ClassVisitor;
-import org.springframework.asm.SpringAsmInfo;
+package org.springframework.aop.target;
 
 /**
- * Dummy implementation of missing TraceClassVisitor from cglib-nodep's internally
- * repackaged ASM library, added to avoid NoClassDefFoundErrors.
+ * Simple {@link org.springframework.aop.TargetSource} implementation,
+ * freshly obtaining the specified target bean from its containing
+ * Spring {@link org.springframework.beans.factory.BeanFactory}.
  *
- * @author Chris Beams
- * @since 3.2
+ * <p>Can obtain any kind of target bean: singleton, scoped, or prototype.
+ * Typically used for scoped beans.
+ *
+ * @author Juergen Hoeller
+ * @since 2.0.3
  */
-public class TraceClassVisitor extends ClassVisitor {
+@SuppressWarnings("serial")
+public class SimpleBeanTargetSource extends AbstractBeanFactoryBasedTargetSource {
 
-	public TraceClassVisitor(Object object, PrintWriter pw) {
-		super(SpringAsmInfo.ASM_VERSION);
-	}
+    public Object getTarget() throws Exception {
+        return getBeanFactory().getBean(getTargetBeanName());
+    }
 
 }

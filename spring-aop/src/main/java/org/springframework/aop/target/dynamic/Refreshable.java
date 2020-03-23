@@ -14,25 +14,31 @@
  * limitations under the License.
  */
 
-package org.springframework.asm.util;
-
-import java.io.PrintWriter;
-
-import org.springframework.asm.ClassVisitor;
-//import org.objectweb.asm.ClassVisitor;
-import org.springframework.asm.SpringAsmInfo;
+package org.springframework.aop.target.dynamic;
 
 /**
- * Dummy implementation of missing TraceClassVisitor from cglib-nodep's internally
- * repackaged ASM library, added to avoid NoClassDefFoundErrors.
+ * Interface to be implemented by dynamic target objects,
+ * which support reloading and optionally polling for updates.
  *
- * @author Chris Beams
- * @since 3.2
+ * @author Rod Johnson
+ * @author Rob Harrop
+ * @since 2.0
  */
-public class TraceClassVisitor extends ClassVisitor {
+public interface Refreshable {
 
-	public TraceClassVisitor(Object object, PrintWriter pw) {
-		super(SpringAsmInfo.ASM_VERSION);
-	}
+    /**
+     * Refresh the underlying target object.
+     */
+    void refresh();
+
+    /**
+     * Return the number of actual refreshes since startup.
+     */
+    long getRefreshCount();
+
+    /**
+     * Return the last time an actual refresh happened (as timestamp).
+     */
+    long getLastRefreshTime();
 
 }

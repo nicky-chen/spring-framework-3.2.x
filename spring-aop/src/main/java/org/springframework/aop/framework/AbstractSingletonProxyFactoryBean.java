@@ -19,6 +19,7 @@ package org.springframework.aop.framework;
 import org.springframework.aop.TargetSource;
 import org.springframework.aop.framework.adapter.AdvisorAdapterRegistry;
 import org.springframework.aop.framework.adapter.GlobalAdvisorAdapterRegistry;
+import org.springframework.aop.target.HotSwappableTargetSource;
 import org.springframework.aop.target.SingletonTargetSource;
 import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.FactoryBean;
@@ -66,7 +67,7 @@ public abstract class AbstractSingletonProxyFactoryBean extends ProxyConfig
 	 * @see org.springframework.aop.target.SingletonTargetSource
 	 * @see org.springframework.aop.target.LazyInitTargetSource
 	 * @see org.springframework.aop.target.PrototypeTargetSource
-	 * @see org.springframework.aop.target.CommonsPoolTargetSource
+	 * @see HotSwappableTargetSource
 	 */
 	public void setTarget(Object target) {
 		this.target = target;

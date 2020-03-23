@@ -14,25 +14,29 @@
  * limitations under the License.
  */
 
-package org.springframework.asm.util;
-
-import java.io.PrintWriter;
-
-import org.springframework.asm.ClassVisitor;
-//import org.objectweb.asm.ClassVisitor;
-import org.springframework.asm.SpringAsmInfo;
+package org.springframework.aop.target;
 
 /**
- * Dummy implementation of missing TraceClassVisitor from cglib-nodep's internally
- * repackaged ASM library, added to avoid NoClassDefFoundErrors.
+ * Statistics for a ThreadLocal TargetSource.
  *
- * @author Chris Beams
- * @since 3.2
+ * @author Rod Johnson
+ * @author Juergen Hoeller
  */
-public class TraceClassVisitor extends ClassVisitor {
+public interface ThreadLocalTargetSourceStats {
 
-	public TraceClassVisitor(Object object, PrintWriter pw) {
-		super(SpringAsmInfo.ASM_VERSION);
-	}
+    /**
+     * Return the number of client invocations.
+     */
+    int getInvocationCount();
+
+    /**
+     * Return the number of hits that were satisfied by a thread-bound object.
+     */
+    int getHitCount();
+
+    /**
+     * Return the number of thread-bound objects created.
+     */
+    int getObjectCount();
 
 }

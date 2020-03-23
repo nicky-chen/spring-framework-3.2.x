@@ -27,7 +27,7 @@ import org.springframework.aop.framework.Advised;
 import org.springframework.aop.framework.autoproxy.target.AbstractBeanFactoryBasedTargetSourceCreator;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.aop.target.AbstractBeanFactoryBasedTargetSource;
-import org.springframework.aop.target.CommonsPoolTargetSource;
+import org.springframework.aop.target.HotSwappableTargetSource;
 import org.springframework.aop.target.LazyInitTargetSource;
 import org.springframework.aop.target.PrototypeTargetSource;
 import org.springframework.aop.target.ThreadLocalTargetSource;
@@ -156,7 +156,7 @@ public final class AdvisorAutoProxyCreatorTests {
 		test = (ITestBean) bf.getBean(":test");
 		assertTrue(AopUtils.isAopProxy(test));
 		Advised advised = (Advised) test;
-		assertTrue(advised.getTargetSource() instanceof CommonsPoolTargetSource);
+		assertTrue(advised.getTargetSource() instanceof HotSwappableTargetSource);
 		assertEquals("Rod", test.getName());
 		// Check that references survived pooling
 		assertEquals("Kerry", test.getSpouse().getName());
