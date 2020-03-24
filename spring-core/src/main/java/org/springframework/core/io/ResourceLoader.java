@@ -19,6 +19,7 @@ package org.springframework.core.io;
 import org.springframework.util.ResourceUtils;
 
 /**
+ * 资源加载的统一抽象
  * Strategy interface for loading resources (e.. class path or file system
  * resources). An {@link org.springframework.context.ApplicationContext}
  * is required to provide this functionality, plus extended
