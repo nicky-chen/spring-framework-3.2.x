@@ -42,6 +42,7 @@ import org.springframework.util.ResourceUtils;
 public abstract class AbstractResource implements Resource {
 
 	/**
+	 * 判断文件是否存在，若判断过程产生异常（因为会调用SecurityManager来判断），就关闭对应的流
 	 * This implementation checks whether a File can be opened,
 	 * falling back to whether an InputStream can be opened.
 	 * This will cover both directories and content resources.
@@ -79,6 +80,7 @@ public abstract class AbstractResource implements Resource {
 	}
 
 	/**
+     * 抛出 FileNotFoundException 异常，交给子类实现
 	 * This implementation throws a FileNotFoundException, assuming
 	 * that the resource cannot be resolved to a URL.
 	 */
@@ -109,6 +111,7 @@ public abstract class AbstractResource implements Resource {
 	}
 
 	/**
+     * 这个资源内容长度实际就是资源的字节长度，通过全部读取一遍来判断
 	 * This implementation reads the entire InputStream to calculate the
 	 * content length. Subclasses will almost always be able to provide
 	 * a more optimal version of this, e.g. checking a File length.
