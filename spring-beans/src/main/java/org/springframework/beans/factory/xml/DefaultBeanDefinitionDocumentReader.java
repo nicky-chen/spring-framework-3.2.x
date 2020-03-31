@@ -98,6 +98,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		this.readerContext = readerContext;
 		logger.debug("Loading bean definitions");
 		Element root = doc.getDocumentElement();
+		// 注册 BeanDefinition
 		doRegisterBeanDefinitions(root);
 	}
 
@@ -127,7 +128,8 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	protected void doRegisterBeanDefinitions(Element root) {
 		String profileSpec = root.getAttribute(PROFILE_ATTRIBUTE);
 		if (StringUtils.hasText(profileSpec)) {
-			String[] specifiedProfiles = StringUtils.tokenizeToStringArray(
+            // 处理 profile
+            String[] specifiedProfiles = StringUtils.tokenizeToStringArray(
 					profileSpec, BeanDefinitionParserDelegate.MULTI_VALUE_ATTRIBUTE_DELIMITERS);
 			if (!getEnvironment().acceptsProfiles(specifiedProfiles)) {
 				return;
@@ -142,10 +144,12 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		// this behavior emulates a stack of delegates without actually necessitating one.
 		BeanDefinitionParserDelegate parent = this.delegate;
 		this.delegate = createDelegate(this.readerContext, root, parent);
-
-		preProcessXml(root);
-		parseBeanDefinitions(root, this.delegate);
-		postProcessXml(root);
+        // 解析前处理
+        preProcessXml(root);
+        // 解析
+        parseBeanDefinitions(root, this.delegate);
+        // 解析后处理
+        postProcessXml(root);
 
 		this.delegate = parent;
 	}
