@@ -79,6 +79,7 @@ public class XmlValidationModeDetector {
 
 
 	/**
+	 * 锁定xml文档的校验模式
 	 * Detect the validation mode for the XML document in the supplied {@link InputStream}.
 	 * Note that the supplied {@link InputStream} is closed by this method before returning.
 	 * @param inputStream the InputStream to parse
@@ -92,12 +93,14 @@ public class XmlValidationModeDetector {
 		try {
 			boolean isDtdValidated = false;
 			String content;
-			while ((content = reader.readLine()) != null) {
+            // 一行一行读取 xml 文件的内容
+            while ((content = reader.readLine()) != null) {
 				content = consumeCommentTokens(content);
 				if (this.inComment || !StringUtils.hasText(content)) {
 					continue;
 				}
-				if (hasDoctype(content)) {
+                // 包含 DOCTYPE 为 DTD 模式
+                if (hasDoctype(content)) {
 					isDtdValidated = true;
 					break;
 				}
@@ -106,7 +109,8 @@ public class XmlValidationModeDetector {
 					break;
 				}
 			}
-			return (isDtdValidated ? VALIDATION_DTD : VALIDATION_XSD);
+            // 为 true 返回 DTD，否则返回 XSD
+            return (isDtdValidated ? VALIDATION_DTD : VALIDATION_XSD);
 		}
 		catch (CharConversionException ex) {
 			// Choked on some character encoding...

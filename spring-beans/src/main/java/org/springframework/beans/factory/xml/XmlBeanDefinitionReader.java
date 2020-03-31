@@ -425,6 +425,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
 
 	/**
+     * 获取数据的验证模式
 	 * Gets the validation mode for the specified {@link Resource}. If no explicit
 	 * validation mode has been configured then the validation mode is
 	 * {@link #detectValidationMode detected}.
@@ -432,17 +433,20 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * mode, even when something other than {@link #VALIDATION_AUTO} was set.
 	 */
 	protected int getValidationModeForResource(Resource resource) {
-		int validationModeToUse = getValidationMode();
+        // 获取指定的验证模式
+        int validationModeToUse = getValidationMode();
 		if (validationModeToUse != VALIDATION_AUTO) {
 			return validationModeToUse;
 		}
-		int detectedMode = detectValidationMode(resource);
+        // 通过程序检测
+        int detectedMode = detectValidationMode(resource);
 		if (detectedMode != VALIDATION_AUTO) {
 			return detectedMode;
 		}
 		// Hmm, we didn't get a clear indication... Let's assume XSD,
 		// since apparently no DTD declaration has been found up until
 		// detection stopped (before finding the document's root tag).
+		// 出现异常，返回 XSD
 		return VALIDATION_XSD;
 	}
 
@@ -474,7 +478,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		}
 
 		try {
-			return this.validationModeDetector.detectValidationMode(inputStream);
+            // 核心方法
+            return this.validationModeDetector.detectValidationMode(inputStream);
 		}
 		catch (IOException ex) {
 			throw new BeanDefinitionStoreException("Unable to determine validation mode for [" +
