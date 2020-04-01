@@ -37,6 +37,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.PropertyEditorRegistrar;
 import org.springframework.beans.PropertyEditorRegistry;
 import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.config.MethodInvokingFactoryBeanTests;
 import org.springframework.beans.factory.config.TypedStringValue;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;

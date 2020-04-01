@@ -198,17 +198,26 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		}
 	}
 
+	/**
+	 * 根节点或者子节点采用默认命名空间的bean处理
+	 * @param ele
+	 * @param delegate
+	 */
 	private void parseDefaultElement(Element ele, BeanDefinitionParserDelegate delegate) {
-		if (delegate.nodeNameEquals(ele, IMPORT_ELEMENT)) {
+        // 对 import 标签的解析
+        if (delegate.nodeNameEquals(ele, IMPORT_ELEMENT)) {
 			importBeanDefinitionResource(ele);
 		}
-		else if (delegate.nodeNameEquals(ele, ALIAS_ELEMENT)) {
+        // 对 alias 标签的解析
+        else if (delegate.nodeNameEquals(ele, ALIAS_ELEMENT)) {
 			processAliasRegistration(ele);
 		}
-		else if (delegate.nodeNameEquals(ele, BEAN_ELEMENT)) {
+        // 对 bean 标签的解析
+        else if (delegate.nodeNameEquals(ele, BEAN_ELEMENT)) {
 			processBeanDefinition(ele, delegate);
 		}
-		else if (delegate.nodeNameEquals(ele, NESTED_BEANS_ELEMENT)) {
+        // 对 beans 标签的解析
+        else if (delegate.nodeNameEquals(ele, NESTED_BEANS_ELEMENT)) {
 			// recurse
 			doRegisterBeanDefinitions(ele);
 		}
@@ -219,8 +228,10 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	 * from the given resource into the bean factory.
 	 */
 	protected void importBeanDefinitionResource(Element ele) {
-		String location = ele.getAttribute(RESOURCE_ATTRIBUTE);
-		if (!StringUtils.hasText(location)) {
+        // 获取 resource 的属性值
+        String location = ele.getAttribute(RESOURCE_ATTRIBUTE);
+        // 为空，直接退出
+        if (!StringUtils.hasText(location)) {
 			getReaderContext().error("Resource location must not be empty", ele);
 			return;
 		}
@@ -231,6 +242,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		Set<Resource> actualResources = new LinkedHashSet<Resource>(4);
 
 		// Discover whether the location is an absolute or relative URI
+        // 判断 location 是相对路径还是绝对路径
 		boolean absoluteLocation = false;
 		try {
 			absoluteLocation = ResourcePatternUtils.isUrl(location) || ResourceUtils.toURI(location).isAbsolute();
@@ -241,9 +253,11 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		}
 
 		// Absolute or relative?
+        // 如果是绝对路径
 		if (absoluteLocation) {
 			try {
-				int importCount = getReaderContext().getReader().loadBeanDefinitions(location, actualResources);
+                // 直接根据地质加载相应的配置文件
+                int importCount = getReaderContext().getReader().loadBeanDefinitions(location, actualResources);
 				if (logger.isDebugEnabled()) {
 					logger.debug("Imported " + importCount + " bean definitions from URL location [" + location + "]");
 				}
@@ -255,7 +269,8 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		}
 		else {
 			// No URL -> considering resource location as relative to the current file.
-			try {
+            // 相对路径则根据相应的地质计算出绝对路径地址
+            try {
 				int importCount;
 				Resource relativeResource = getReaderContext().getResource().createRelative(location);
 				if (relativeResource.exists()) {
@@ -280,6 +295,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 			}
 		}
 		Resource[] actResArray = actualResources.toArray(new Resource[actualResources.size()]);
+		// 解析成功后，进行监听器激活处理
 		getReaderContext().fireImportProcessed(location, actResArray, extractSource(ele));
 	}
 
