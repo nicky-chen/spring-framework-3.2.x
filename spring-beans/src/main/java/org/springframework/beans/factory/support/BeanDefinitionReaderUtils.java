@@ -70,6 +70,7 @@ public class BeanDefinitionReaderUtils {
 	}
 
 	/**
+	 * 生成beanName规则
 	 * Generate a bean name for the given bean definition, unique within the
 	 * given bean factory.
 	 * @param definition the bean definition to generate a bean name for

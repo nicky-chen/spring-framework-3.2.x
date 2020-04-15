@@ -448,10 +448,12 @@ public class BeanDefinitionParserDelegate {
 	 * {@link org.springframework.beans.factory.parsing.ProblemReporter}.
 	 */
 	public BeanDefinitionHolder parseBeanDefinitionElement(Element ele, BeanDefinition containingBean) {
-		String id = ele.getAttribute(ID_ATTRIBUTE);
-		String nameAttr = ele.getAttribute(NAME_ATTRIBUTE);
-
-		List<String> aliases = new ArrayList<String>();
+        // 解析 ID 属性
+        String id = ele.getAttribute(ID_ATTRIBUTE);
+        // 解析 name 属性
+        String nameAttr = ele.getAttribute(NAME_ATTRIBUTE);
+        // 分割 name 属性
+        List<String> aliases = new ArrayList<String>();
 		if (StringUtils.hasLength(nameAttr)) {
 			String[] nameArr = StringUtils.tokenizeToStringArray(nameAttr, MULTI_VALUE_ATTRIBUTE_DELIMITERS);
 			aliases.addAll(Arrays.asList(nameArr));
@@ -465,20 +467,22 @@ public class BeanDefinitionParserDelegate {
 						"' as bean name and " + aliases + " as aliases");
 			}
 		}
-
-		if (containingBean == null) {
+        // 检查 name 的唯一性
+        if (containingBean == null) {
 			checkNameUniqueness(beanName, aliases, ele);
 		}
-
-		AbstractBeanDefinition beanDefinition = parseBeanDefinitionElement(ele, beanName, containingBean);
+        // 解析 属性，构造 AbstractBeanDefinition
+        AbstractBeanDefinition beanDefinition = parseBeanDefinitionElement(ele, beanName, containingBean);
 		if (beanDefinition != null) {
-			if (!StringUtils.hasText(beanName)) {
+            // 如果 beanName 不存在，则根据条件构造一个 beanName
+            if (!StringUtils.hasText(beanName)) {
 				try {
 					if (containingBean != null) {
 						beanName = BeanDefinitionReaderUtils.generateBeanName(
 								beanDefinition, this.readerContext.getRegistry(), true);
 					}
 					else {
+					    // 构造beanName
 						beanName = this.readerContext.generateBeanName(beanDefinition);
 						// Register an alias for the plain bean class name, if still possible,
 						// if the generator returned the class name plus a suffix.
@@ -501,7 +505,8 @@ public class BeanDefinitionParserDelegate {
 				}
 			}
 			String[] aliasesArray = StringUtils.toStringArray(aliases);
-			return new BeanDefinitionHolder(beanDefinition, beanName, aliasesArray);
+            // 封装 BeanDefinitionHolder
+            return new BeanDefinitionHolder(beanDefinition, beanName, aliasesArray);
 		}
 
 		return null;
@@ -547,20 +552,27 @@ public class BeanDefinitionParserDelegate {
 			if (ele.hasAttribute(PARENT_ATTRIBUTE)) {
 				parent = ele.getAttribute(PARENT_ATTRIBUTE);
 			}
-			AbstractBeanDefinition bd = createBeanDefinition(className, parent);
+            // 创建用于承载属性的 GenericBeanDefinition 实例
+            AbstractBeanDefinition bd = createBeanDefinition(className, parent);
+            // 解析默认 bean 的各种属性
+            parseBeanDefinitionAttributes(ele, beanName, containingBean, bd);
+            // 提取 description
+            bd.setDescription(DomUtils.getChildElementValueByTagName(ele, DESCRIPTION_ELEMENT));
 
-			parseBeanDefinitionAttributes(ele, beanName, containingBean, bd);
-			bd.setDescription(DomUtils.getChildElementValueByTagName(ele, DESCRIPTION_ELEMENT));
+            // 解析元数据
+            parseMetaElements(ele, bd);
+            // 解析 lookup-method 属性
+            parseLookupOverrideSubElements(ele, bd.getMethodOverrides());
+            // 解析 replaced-method 属性
+            parseReplacedMethodSubElements(ele, bd.getMethodOverrides());
 
-			parseMetaElements(ele, bd);
-			parseLookupOverrideSubElements(ele, bd.getMethodOverrides());
-			parseReplacedMethodSubElements(ele, bd.getMethodOverrides());
-
-			parseConstructorArgElements(ele, bd);
-			parsePropertyElements(ele, bd);
-			parseQualifierElements(ele, bd);
-
-			bd.setResource(this.readerContext.getResource());
+            // 解析构造函数参数
+            parseConstructorArgElements(ele, bd);
+            // 解析 property 子元素
+            parsePropertyElements(ele, bd);
+            // 解析 qualifier 子元素
+            parseQualifierElements(ele, bd);
+            bd.setResource(this.readerContext.getResource());
 			bd.setSource(extractSource(ele));
 
 			return bd;
@@ -591,7 +603,8 @@ public class BeanDefinitionParserDelegate {
 	public AbstractBeanDefinition parseBeanDefinitionAttributes(Element ele, String beanName,
 			BeanDefinition containingBean, AbstractBeanDefinition bd) {
 
-		if (ele.hasAttribute(SCOPE_ATTRIBUTE)) {
+        // 解析 scope 标签
+        if (ele.hasAttribute(SCOPE_ATTRIBUTE)) {
 			// Spring 2.x "scope" attribute
 			bd.setScope(ele.getAttribute(SCOPE_ATTRIBUTE));
 			if (ele.hasAttribute(SINGLETON_ATTRIBUTE)) {
@@ -607,29 +620,29 @@ public class BeanDefinitionParserDelegate {
 			// Take default from containing bean in case of an inner bean definition.
 			bd.setScope(containingBean.getScope());
 		}
-
-		if (ele.hasAttribute(ABSTRACT_ATTRIBUTE)) {
+        // 解析 abstract 标签
+        if (ele.hasAttribute(ABSTRACT_ATTRIBUTE)) {
 			bd.setAbstract(TRUE_VALUE.equals(ele.getAttribute(ABSTRACT_ATTRIBUTE)));
 		}
-
-		String lazyInit = ele.getAttribute(LAZY_INIT_ATTRIBUTE);
+        // 解析 lazy-init 标签
+        String lazyInit = ele.getAttribute(LAZY_INIT_ATTRIBUTE);
 		if (DEFAULT_VALUE.equals(lazyInit)) {
 			lazyInit = this.defaults.getLazyInit();
 		}
 		bd.setLazyInit(TRUE_VALUE.equals(lazyInit));
-
-		String autowire = ele.getAttribute(AUTOWIRE_ATTRIBUTE);
+        // 解析 autowire 标签
+        String autowire = ele.getAttribute(AUTOWIRE_ATTRIBUTE);
 		bd.setAutowireMode(getAutowireMode(autowire));
-
-		String dependencyCheck = ele.getAttribute(DEPENDENCY_CHECK_ATTRIBUTE);
+        // 解析 depends-on 标签
+        String dependencyCheck = ele.getAttribute(DEPENDENCY_CHECK_ATTRIBUTE);
 		bd.setDependencyCheck(getDependencyCheck(dependencyCheck));
 
 		if (ele.hasAttribute(DEPENDS_ON_ATTRIBUTE)) {
 			String dependsOn = ele.getAttribute(DEPENDS_ON_ATTRIBUTE);
 			bd.setDependsOn(StringUtils.tokenizeToStringArray(dependsOn, MULTI_VALUE_ATTRIBUTE_DELIMITERS));
 		}
-
-		String autowireCandidate = ele.getAttribute(AUTOWIRE_CANDIDATE_ATTRIBUTE);
+        // 解析 autowire-candidate 标签
+        String autowireCandidate = ele.getAttribute(AUTOWIRE_CANDIDATE_ATTRIBUTE);
 		if ("".equals(autowireCandidate) || DEFAULT_VALUE.equals(autowireCandidate)) {
 			String candidatePattern = this.defaults.getAutowireCandidates();
 			if (candidatePattern != null) {
@@ -640,12 +653,12 @@ public class BeanDefinitionParserDelegate {
 		else {
 			bd.setAutowireCandidate(TRUE_VALUE.equals(autowireCandidate));
 		}
-
-		if (ele.hasAttribute(PRIMARY_ATTRIBUTE)) {
+        // 解析 primary 标签
+        if (ele.hasAttribute(PRIMARY_ATTRIBUTE)) {
 			bd.setPrimary(TRUE_VALUE.equals(ele.getAttribute(PRIMARY_ATTRIBUTE)));
 		}
-
-		if (ele.hasAttribute(INIT_METHOD_ATTRIBUTE)) {
+        // 解析 init-method 标签
+        if (ele.hasAttribute(INIT_METHOD_ATTRIBUTE)) {
 			String initMethodName = ele.getAttribute(INIT_METHOD_ATTRIBUTE);
 			if (!"".equals(initMethodName)) {
 				bd.setInitMethodName(initMethodName);
@@ -657,8 +670,8 @@ public class BeanDefinitionParserDelegate {
 				bd.setEnforceInitMethod(false);
 			}
 		}
-
-		if (ele.hasAttribute(DESTROY_METHOD_ATTRIBUTE)) {
+        // 解析 destroy-mothod 标签
+        if (ele.hasAttribute(DESTROY_METHOD_ATTRIBUTE)) {
 			String destroyMethodName = ele.getAttribute(DESTROY_METHOD_ATTRIBUTE);
 			if (!"".equals(destroyMethodName)) {
 				bd.setDestroyMethodName(destroyMethodName);
@@ -670,8 +683,8 @@ public class BeanDefinitionParserDelegate {
 				bd.setEnforceDestroyMethod(false);
 			}
 		}
-
-		if (ele.hasAttribute(FACTORY_METHOD_ATTRIBUTE)) {
+        // 解析 factory-method 标签
+        if (ele.hasAttribute(FACTORY_METHOD_ATTRIBUTE)) {
 			bd.setFactoryMethodName(ele.getAttribute(FACTORY_METHOD_ATTRIBUTE));
 		}
 		if (ele.hasAttribute(FACTORY_BEAN_ATTRIBUTE)) {
