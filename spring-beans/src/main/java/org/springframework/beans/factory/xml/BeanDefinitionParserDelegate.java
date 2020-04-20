@@ -566,7 +566,7 @@ public class BeanDefinitionParserDelegate {
             // 解析 replaced-method 属性
             parseReplacedMethodSubElements(ele, bd.getMethodOverrides());
 
-            // 解析构造函数参数
+            // 解析构造函数参数constructor-arg
             parseConstructorArgElements(ele, bd);
             // 解析 property 子元素
             parsePropertyElements(ele, bd);
@@ -1462,6 +1462,7 @@ public class BeanDefinitionParserDelegate {
 		}
 
 		// Decorate based on custom nested elements.
+		// 遍历节点（子节点），调用 decorateIfRequired() 装饰节点（子节点）
 		NodeList children = ele.getChildNodes();
 		for (int i = 0; i < children.getLength(); i++) {
 			Node node = children.item(i);
@@ -1474,12 +1475,14 @@ public class BeanDefinitionParserDelegate {
 
 	private BeanDefinitionHolder decorateIfRequired(
 			Node node, BeanDefinitionHolder originalDef, BeanDefinition containingBd) {
-
-		String namespaceUri = getNamespaceURI(node);
-		if (!isDefaultNamespace(namespaceUri)) {
+        // 获取自定义标签的命名空间
+        String namespaceUri = getNamespaceURI(node);
+        // 过滤掉默认命名标签
+        if (!isDefaultNamespace(namespaceUri)) {
 			NamespaceHandler handler = this.readerContext.getNamespaceHandlerResolver().resolve(namespaceUri);
 			if (handler != null) {
-				return handler.decorate(node, originalDef, new ParserContext(this.readerContext, this, containingBd));
+                // 进行装饰处理
+                return handler.decorate(node, originalDef, new ParserContext(this.readerContext, this, containingBd));
 			}
 			else if (namespaceUri != null && namespaceUri.startsWith("http://www.springframework.org/")) {
 				error("Unable to locate Spring NamespaceHandler for XML schema namespace [" + namespaceUri + "]", node);
