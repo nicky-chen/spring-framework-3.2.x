@@ -86,6 +86,9 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	/** Cache of singleton factories: bean name --> ObjectFactory */
 	private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<String, ObjectFactory<?>>(16);
 
+    /**
+     * 提前创建的单例对象map
+     */
 	/** Cache of early singleton objects: bean name --> bean instance */
 	private final Map<String, Object> earlySingletonObjects = new HashMap<String, Object>(16);
 
@@ -177,12 +180,17 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * @return the registered singleton object, or {@code null} if none found
 	 */
 	protected Object getSingleton(String beanName, boolean allowEarlyReference) {
-		Object singletonObject = this.singletonObjects.get(beanName);
-		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
+        // 从单例缓存中加载 bean
+        Object singletonObject = this.singletonObjects.get(beanName);
+        // 缓存中的 bean 为空，且当前 bean 正在创建
+        if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
 			synchronized (this.singletonObjects) {
-				singletonObject = this.earlySingletonObjects.get(beanName);
-				if (singletonObject == null && allowEarlyReference) {
-					ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
+                // 从 earlySingletonObjects 获取
+                singletonObject = this.earlySingletonObjects.get(beanName);
+                // earlySingletonObjects 中没有，且允许提前创建
+                if (singletonObject == null && allowEarlyReference) {
+                    // 从 singletonFactories 中获取对应的 ObjectFactory
+                    ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
 					if (singletonFactory != null) {
 						singletonObject = singletonFactory.getObject();
 						this.earlySingletonObjects.put(beanName, singletonObject);

@@ -86,6 +86,7 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 	}
 
 	/**
+     * 从FactoryBean中获取对象
 	 * Obtain an object to expose from the given FactoryBean.
 	 * @param factory the FactoryBean instance
 	 * @param beanName the name of the bean
@@ -95,11 +96,14 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 	 * @see org.springframework.beans.factory.FactoryBean#getObject()
 	 */
 	protected Object getObjectFromFactoryBean(FactoryBean<?> factory, String beanName, boolean shouldPostProcess) {
+		// 为单例模式且缓存中存在
 		if (factory.isSingleton() && containsSingleton(beanName)) {
 			synchronized (getSingletonMutex()) {
-				Object object = this.factoryBeanObjectCache.get(beanName);
+                // 从缓存中获取指定的 factoryBean
+                Object object = this.factoryBeanObjectCache.get(beanName);
 				if (object == null) {
-					object = doGetObjectFromFactoryBean(factory, beanName);
+                    // 为空，则从 FactoryBean 中获取对象
+                    object = doGetObjectFromFactoryBean(factory, beanName);
 					// Only post-process and store if not put there already during getObject() call above
 					// (e.g. because of circular reference processing triggered by custom getBean calls)
 					Object alreadyThere = this.factoryBeanObjectCache.get(beanName);
@@ -107,8 +111,11 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 						object = alreadyThere;
 					}
 					else {
-						if (object != null && shouldPostProcess) {
+                        // 需要后续处理
+                        if (object != null && shouldPostProcess) {
 							try {
+                                // 对从 FactoryBean 获取的对象进行后处理
+                                // 生成的对象将暴露给bean引用
 								object = postProcessObjectFromFactoryBean(object, beanName);
 							}
 							catch (Throwable ex) {
@@ -123,7 +130,8 @@ public abstract class FactoryBeanRegistrySupport extends DefaultSingletonBeanReg
 			}
 		}
 		else {
-			Object object = doGetObjectFromFactoryBean(factory, beanName);
+            // 非单例
+            Object object = doGetObjectFromFactoryBean(factory, beanName);
 			if (object != null && shouldPostProcess) {
 				try {
 					object = postProcessObjectFromFactoryBean(object, beanName);

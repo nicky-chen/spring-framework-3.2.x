@@ -87,7 +87,8 @@ public final class ClassPathXmlApplicationContextTests {
 		assertTrue(ctx.containsBean("logicOne"));
 		assertTrue(ctx.containsBean("logicTwo"));
 		Service service = (Service) ctx.getBean("service");
-		ctx.refresh();
+        Object assemblerOne = ctx.getBean("wrappedAssemblerOne");
+        ctx.refresh();
 		assertTrue(service.isProperlyDestroyed());
 		service = (Service) ctx.getBean("service");
 		ctx.close();
