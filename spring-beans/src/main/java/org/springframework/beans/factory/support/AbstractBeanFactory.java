@@ -294,7 +294,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
                     for (String dependsOnBean : dependsOn) {
                         // 递归调用 getBean 初始化依赖bean
                         getBean(dependsOnBean);
-                        // 注册到依赖bean中
+                        // 处理依赖bean与被依赖bean的关联关系
                         registerDependentBean(dependsOnBean, beanName);
 					}
 				}
@@ -313,14 +313,15 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 								// eagerly by the creation process, to allow for circular reference resolution.
 								// Also remove any beans that received a temporary reference to the bean.
 
-                                // 显示从单利缓存中删除 bean 实例
+                                // 显示从单例缓存中删除 bean 实例
                                 // 因为单例模式下为了解决循环依赖，可能他已经存在了，所以销毁它
                                 destroySingleton(beanName);
 								throw ex;
 							}
 						}
 					});
-					bean = getObjectForBeanInstance(sharedInstance, name, beanName, mbd);
+                    // 校验并返回bean实例本身或FactoryBean 创建的对象
+                    bean = getObjectForBeanInstance(sharedInstance, name, beanName, mbd);
 				}
                 // 原型模式
                 else if (mbd.isPrototype()) {
@@ -333,9 +334,10 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					finally {
 						afterPrototypeCreation(beanName);
 					}
-					bean = getObjectForBeanInstance(prototypeInstance, name, beanName, mbd);
+                    // 校验并返回bean实例本身或FactoryBean 创建的对象
+                    bean = getObjectForBeanInstance(prototypeInstance, name, beanName, mbd);
 				}
-
+                // 其他作用域
 				else {
                     // 从指定的 scope 下创建 bean
                     String scopeName = mbd.getScope();
@@ -1455,6 +1457,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	}
 
 	/**
+     * 校验bean类型并返回bean
 	 * Get the object for the given bean instance, either the bean
 	 * instance itself or its created object in case of a FactoryBean.
 	 * @param beanInstance the shared bean instance
