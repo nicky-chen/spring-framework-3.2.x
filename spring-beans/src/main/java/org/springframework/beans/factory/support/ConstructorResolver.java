@@ -361,8 +361,11 @@ class ConstructorResolver {
 	public BeanWrapper instantiateUsingFactoryMethod(
 			final String beanName, final RootBeanDefinition mbd, final Object[] explicitArgs) {
 
+		// 构造 BeanWrapperImpl 对象
 		BeanWrapperImpl bw = new BeanWrapperImpl();
-		this.beanFactory.initBeanWrapper(bw);
+        // 初始化 BeanWrapperImpl
+        // 向BeanWrapper对象中添加 ConversionService 对象和属性编辑器 PropertyEditor 对象
+        this.beanFactory.initBeanWrapper(bw);
 
 		Object factoryBean;
 		Class<?> factoryClass;
@@ -392,11 +395,15 @@ class ConstructorResolver {
 			factoryClass = mbd.getBeanClass();
 			isStatic = true;
 		}
-
-		Method factoryMethodToUse = null;
+        // 工厂方法
+        Method factoryMethodToUse = null;
 		ArgumentsHolder argsHolderToUse = null;
-		Object[] argsToUse = null;
+        // 参数
+        Object[] argsToUse = null;
 
+        // 获取工厂方法的参数
+        // 如果指定了构造参数则直接使用
+        // 在调用 getBean 方法的时候指定了方法参数
 		if (explicitArgs != null) {
 			argsToUse = explicitArgs;
 		}
@@ -416,7 +423,7 @@ class ConstructorResolver {
 				argsToUse = resolvePreparedArguments(beanName, mbd, bw, factoryMethodToUse, argsToResolve);
 			}
 		}
-
+		// 如果工厂方法或者参数未找到
 		if (factoryMethodToUse == null || argsToUse == null) {
 			// Need to determine the factory method...
 			// Try all methods with this name to see if they match the given arguments.
@@ -528,8 +535,8 @@ class ConstructorResolver {
 					}
 				}
 			}
-
-			if (factoryMethodToUse == null) {
+            // 没有可执行的工厂方法，抛出异常
+            if (factoryMethodToUse == null) {
 				List<String> argTypes = new ArrayList<String>(minNrOfArgs);
 				if (explicitArgs != null) {
 					for (Object arg : explicitArgs) {
@@ -574,6 +581,7 @@ class ConstructorResolver {
 			}
 		}
 
+		// 校验工厂方法完毕实例化 bean
 		try {
 			Object beanInstance;
 

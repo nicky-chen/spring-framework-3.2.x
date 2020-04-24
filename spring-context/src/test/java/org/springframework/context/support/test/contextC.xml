@@ -13,5 +13,11 @@
 		<!--<property name="assembler"><ref bean="assemblerOne"/></property>-->
 		<property name="assembler"><ref bean="${targetName}"/></property>
 	</bean>
+
+	<bean id="default" class="org.springframework.beans.factory.xml.FactoryMethods"
+		  factory-method="defaultInstance">
+		<!-- No constructor-arg elements -->
+		<property name="stringValue"><value>setterString</value></property>
+	</bean>
 	
 </beans>
