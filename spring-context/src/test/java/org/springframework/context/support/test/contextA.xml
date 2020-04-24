@@ -30,9 +30,13 @@
 	<bean name="wrappedAssemblerOne" class="org.springframework.context.support.TestProxyFactoryBean">
 		<property name="target" ref="assemblerOne"/>
 	</bean>
+	<bean name="assemblerA" class="org.springframework.context.support.Assembler">
+		<property name="service"><ref bean="service"/></property>
+		<property name="logic"><ref bean="logicOne"/></property>
+	</bean>
 
 	<bean name="wrappedAssemblerTwo" class="org.springframework.context.support.TestProxyFactoryBean">
-	    <property name="target" ref="assemblerTwo"/>
-	</bean>
+	<property name="target" ref="assemblerA"/>
+</bean>
 
 </beans>

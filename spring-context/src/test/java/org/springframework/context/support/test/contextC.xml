@@ -19,5 +19,12 @@
 		<!-- No constructor-arg elements -->
 		<property name="stringValue"><value>setterString</value></property>
 	</bean>
-	
+
+    <bean id="testB" class="org.springframework.context.support.test.TestB" autowire="no">
+        <property name="name" value="aaa"/>
+    </bean>
+
+    <bean id="testA" class="org.springframework.context.support.test.TestA" autowire="constructor">
+		<constructor-arg index="0" ref="testB"/>
+	</bean>
 </beans>

@@ -112,8 +112,8 @@ public class CglibSubclassingInstantiationStrategy extends SimpleInstantiationSt
 			enhancer.setCallbackFilter(new CallbackFilterImpl());
 			enhancer.setCallbacks(new Callback[] {
 					NoOp.INSTANCE,
-					new LookupOverrideMethodInterceptor(),
-					new ReplaceOverrideMethodInterceptor()
+					new LookupOverrideMethodInterceptor(),  //  lookup方法处理
+					new ReplaceOverrideMethodInterceptor()  // replace 标签处理
 			});
 
 			return (ctor != null ? enhancer.create(ctor.getParameterTypes(), args) : enhancer.create());

@@ -108,6 +108,8 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 	public Object instantiate(RootBeanDefinition beanDefinition, String beanName, BeanFactory owner,
 			final Constructor<?> ctor, Object[] args) {
 
+        // 如果该 bean 没有配置 lookup-method、replaced-method 标签或者 @Lookup 注解，
+        // 则直接通过反射的方式实例化 bean 即可， 否则 CGLIB 进行动态代理
 		if (beanDefinition.getMethodOverrides().isEmpty()) {
 			if (System.getSecurityManager() != null) {
 				// use own privileged to change accessibility (when security is on)
@@ -121,6 +123,7 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 			return BeanUtils.instantiateClass(ctor, args);
 		}
 		else {
+			// 生成CGLIB创建的子类对象
 			return instantiateWithMethodInjection(beanDefinition, beanName, owner, ctor, args);
 		}
 	}

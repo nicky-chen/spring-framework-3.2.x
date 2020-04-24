@@ -8,7 +8,7 @@
 		<property name="logic"><ref bean="logicOne"/></property>
 	</bean>
 
-	<bean name="inheritingAssemblerOne" parent="assemblerTwo">
+	<bean name="inheritingAssemblerOne" parent="assemblerA">
 		<property name="logic"><ref bean="logicOne"/></property>
 	</bean>
 

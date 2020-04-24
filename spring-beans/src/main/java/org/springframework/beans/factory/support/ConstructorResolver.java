@@ -105,14 +105,18 @@ class ConstructorResolver {
 		BeanWrapperImpl bw = new BeanWrapperImpl();
 		this.beanFactory.initBeanWrapper(bw);
 
+		// 构造函数
 		Constructor<?> constructorToUse = null;
-		ArgumentsHolder argsHolderToUse = null;
+        // 构造参数
+        ArgumentsHolder argsHolderToUse = null;
 		Object[] argsToUse = null;
 
 		if (explicitArgs != null) {
 			argsToUse = explicitArgs;
 		}
 		else {
+
+          // 尝试从缓存中获取
 			Object[] argsToResolve = null;
 			synchronized (mbd.constructorArgumentLock) {
 				constructorToUse = (Constructor<?>) mbd.resolvedConstructorOrFactoryMethod;
@@ -131,7 +135,8 @@ class ConstructorResolver {
 
 		if (constructorToUse == null) {
 			// Need to resolve the constructor.
-			boolean autowiring = (chosenCtors != null ||
+            // 是否需要解析构造器
+            boolean autowiring = (chosenCtors != null ||
 					mbd.getResolvedAutowireMode() == RootBeanDefinition.AUTOWIRE_CONSTRUCTOR);
 			ConstructorArgumentValues resolvedValues = null;
 
@@ -140,9 +145,13 @@ class ConstructorResolver {
 				minNrOfArgs = explicitArgs.length;
 			}
 			else {
-				ConstructorArgumentValues cargs = mbd.getConstructorArgumentValues();
+                // 从 BeanDefinition 中获取构造参数，也就是从配置文件中提取构造参数
+                ConstructorArgumentValues cargs = mbd.getConstructorArgumentValues();
 				resolvedValues = new ConstructorArgumentValues();
-				minNrOfArgs = resolveConstructorArguments(beanName, mbd, bw, cargs, resolvedValues);
+
+                // 解析构造函数的参数
+                // 将该 bean 的构造函数参数解析为 resolvedValues 对象，其中会涉及到其他 bean
+                minNrOfArgs = resolveConstructorArguments(beanName, mbd, bw, cargs, resolvedValues);
 			}
 
 			// Take specified constructors, if any.
@@ -159,6 +168,9 @@ class ConstructorResolver {
 							"] from ClassLoader [" + beanClass.getClassLoader() + "] failed", ex);
 				}
 			}
+
+            // 对构造函数进行排序处理
+            // public 构造函数优先参数数量降序，非public 构造函数参数数量降序
 			AutowireUtils.sortConstructors(candidates);
 			int minTypeDiffWeight = Integer.MAX_VALUE;
 			Set<Constructor<?>> ambiguousConstructors = null;
@@ -254,8 +266,8 @@ class ConstructorResolver {
 						"(hint: specify index/type/name arguments for simple parameters to avoid type ambiguities): " +
 						ambiguousConstructors);
 			}
-
-			if (explicitArgs == null) {
+            // 将构造函数、构造参数保存到缓存中
+            if (explicitArgs == null) {
 				argsHolderToUse.storeCache(mbd, constructorToUse);
 			}
 		}
