@@ -24,6 +24,9 @@
         <property name="name" value="aaa"/>
     </bean>
 
+    <bean id="testC" class="org.springframework.context.support.test.TestC" autowire="byName">
+    </bean>
+
     <bean id="testA" class="org.springframework.context.support.test.TestA" autowire="constructor">
 		<constructor-arg index="0" ref="testB"/>
 	</bean>
