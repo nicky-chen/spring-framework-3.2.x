@@ -80,14 +80,20 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	/** Logger available to subclasses */
 	protected final Log logger = LogFactory.getLog(getClass());
 
+    /**
+     *单例对象的cache
+     */
 	/** Cache of singleton objects: bean name --> bean instance */
 	private final Map<String, Object> singletonObjects = new ConcurrentHashMap<String, Object>(64);
 
+    /**
+     * 单例对象工厂的cache
+     */
 	/** Cache of singleton factories: bean name --> ObjectFactory */
 	private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<String, ObjectFactory<?>>(16);
 
     /**
-     * 提前创建的单例对象map
+     * 提前创建的单例对象缓存
      */
 	/** Cache of early singleton objects: bean name --> bean instance */
 	private final Map<String, Object> earlySingletonObjects = new HashMap<String, Object>(16);
@@ -180,7 +186,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * @return the registered singleton object, or {@code null} if none found
 	 */
 	protected Object getSingleton(String beanName, boolean allowEarlyReference) {
-        // 从单例缓存中加载 bean
+        // 从单例一级缓存中加载完整bean
         Object singletonObject = this.singletonObjects.get(beanName);
         // 缓存中的 bean 为空，且当前 bean 正在创建
         if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
@@ -191,7 +197,8 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
                 if (singletonObject == null && allowEarlyReference) {
                     // 从 singletonFactories 中获取对应的 ObjectFactory
                     ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
-					if (singletonFactory != null) {
+					// 加入二级缓存删除三级缓存
+                    if (singletonFactory != null) {
 						singletonObject = singletonFactory.getObject();
 						this.earlySingletonObjects.put(beanName, singletonObject);
 						this.singletonFactories.remove(beanName);
@@ -253,7 +260,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
                     // 后置处理
                     afterSingletonCreation(beanName);
 				}
-                // 加入缓存中
+                // 创建完成bean成功则将bean加入一级缓存singletonObjects中，删除二级和三级缓存
                 addSingleton(beanName, singletonObject);
 			}
 			return (singletonObject != NULL_OBJECT ? singletonObject : null);
