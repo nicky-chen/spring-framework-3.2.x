@@ -289,9 +289,10 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 	@Override
 	public PropertyValues postProcessPropertyValues(
 			PropertyValues pvs, PropertyDescriptor[] pds, Object bean, String beanName) throws BeansException {
-
+		//获取基于autowired注解的属性
 		InjectionMetadata metadata = findAutowiringMetadata(beanName, bean.getClass(), pvs);
 		try {
+		    // 属性赋值
 			metadata.inject(bean, beanName, pvs);
 		}
 		catch (Throwable ex) {
@@ -523,6 +524,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 					}
 				}
 				if (value != null) {
+				    // 赋值
 					ReflectionUtils.makeAccessible(field);
 					field.set(bean, value);
 				}

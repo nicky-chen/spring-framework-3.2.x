@@ -305,6 +305,9 @@ public class AutowiredAnnotationBeanPostProcessorTests {
 		bf.destroySingletons();
 	}
 
+	/**
+	 * autowired注解使用
+	 */
 	@Test
 	public void testOptionalResourceInjectionWithIncompleteDependencies() {
 		DefaultListableBeanFactory bf = new DefaultListableBeanFactory();

@@ -163,6 +163,7 @@ public class InjectionMetadata {
 		 * Either this or {@link #getResourceToInject} needs to be overridden.
 		 */
 		protected void inject(Object target, String requestingBeanName, PropertyValues pvs) throws Throwable {
+			// 如果是属性注解赋值
 			if (this.isField) {
 				Field field = (Field) this.member;
 				ReflectionUtils.makeAccessible(field);
