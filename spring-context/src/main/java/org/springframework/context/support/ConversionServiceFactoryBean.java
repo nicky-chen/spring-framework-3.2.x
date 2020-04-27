@@ -26,6 +26,7 @@ import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.core.convert.support.GenericConversionService;
 
 /**
+ * 转换服务的bean注册通过该类实现
  * A factory providing convenient access to a ConversionService configured with
  * converters appropriate for most environments. Set the {@link #setConverters
  * "converters"} property to supplement the default converters.
@@ -66,6 +67,7 @@ public class ConversionServiceFactoryBean implements FactoryBean<ConversionServi
 
 	public void afterPropertiesSet() {
 		this.conversionService = createConversionService();
+		// 注册转换器和转换业务
 		ConversionServiceFactory.registerConverters(this.converters, this.conversionService);
 	}
 

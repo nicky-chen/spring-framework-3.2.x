@@ -47,6 +47,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
+ * 通用转换接口
  * Base {@link ConversionService} implementation suitable for use in most environments.
  * Indirectly implements {@link ConverterRegistry} as registration API through the
  * {@link ConfigurableConversionService} interface.

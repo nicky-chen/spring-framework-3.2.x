@@ -21,6 +21,7 @@ import java.lang.reflect.Field;
 import org.springframework.core.MethodParameter;
 
 /**
+ * 类型转换器
  * Interface that defines type conversion methods. Typically (but not necessarily)
  * implemented in conjunction with the {@link PropertyEditorRegistry} interface.
  *
