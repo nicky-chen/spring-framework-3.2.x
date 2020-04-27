@@ -1567,6 +1567,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			}, getAccessControlContext());
 		}
 		else {
+			// 处理 aware类型的类
 			invokeAwareMethods(beanName, bean);
 		}
 
@@ -1591,6 +1592,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	}
 
 	private void invokeAwareMethods(final String beanName, final Object bean) {
+	    // 处理实现了aware接口相关类，调用方法
 		if (bean instanceof Aware) {
 			if (bean instanceof BeanNameAware) {
 				((BeanNameAware) bean).setBeanName(beanName);

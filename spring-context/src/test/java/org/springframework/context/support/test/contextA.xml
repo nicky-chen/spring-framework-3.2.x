@@ -35,8 +35,9 @@
 		<property name="logic"><ref bean="logicOne"/></property>
 	</bean>
 
-	<bean name="wrappedAssemblerTwo" class="org.springframework.context.support.TestProxyFactoryBean">
-	<property name="target" ref="assemblerA"/>
-</bean>
+    <bean name="wrappedAssemblerTwo" class="org.springframework.context.support.TestProxyFactoryBean">
+        <property name="target" ref="assemblerA"/>
+    </bean>
+    <bean name="aa" class="org.springframework.context.support.test.MyApplicationAware"/>
 
 </beans>
