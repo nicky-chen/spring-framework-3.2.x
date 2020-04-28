@@ -40,4 +40,6 @@
     </bean>
     <bean name="aa" class="org.springframework.context.support.test.MyApplicationAware"/>
 
+	<bean name="beanFactoryPostProcessorOne" class="org.springframework.context.support.test.BeanFactoryPostProcessorOne"/>
+
 </beans>

@@ -34,6 +34,7 @@ import org.springframework.beans.factory.BeanFactory;
 public interface InstantiationStrategy {
 
 	/**
+	 * 默认构造方法
 	 * Return an instance of the bean with the given name in this factory.
 	 * @param beanDefinition the bean definition
 	 * @param beanName name of the bean when it's created in this context.
@@ -47,6 +48,7 @@ public interface InstantiationStrategy {
 			throws BeansException;
 
 	/**
+     * 指定构造方法
 	 * Return an instance of the bean with the given name in this factory,
 	 * creating it via the given constructor.
 	 * @param beanDefinition the bean definition
@@ -63,6 +65,7 @@ public interface InstantiationStrategy {
 			Constructor<?> ctor, Object[] args) throws BeansException;
 
 	/**
+     * 工厂方法
 	 * Return an instance of the bean with the given name in this factory,
 	 * creating it via the given factory method.
 	 * @param beanDefinition bean definition

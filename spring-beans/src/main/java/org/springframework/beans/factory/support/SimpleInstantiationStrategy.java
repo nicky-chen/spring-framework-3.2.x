@@ -105,6 +105,19 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 				"Method Injection not supported in SimpleInstantiationStrategy");
 	}
 
+    /**
+     * 如果是构造方法实例化，则是先判断是否有 MethodOverrides，
+     * 如果没有则是直接使用反射，如果有则就需要 CGLIB 实例化对象
+     *
+     * @param beanDefinition the bean definition
+     * @param beanName name of the bean when it's created in this context.
+     * The name can be {@code null} if we're autowiring a bean
+     * that doesn't belong to the factory.
+     * @param owner owning BeanFactory
+     * @param ctor the constructor to use
+     * @param args the constructor arguments to apply
+     * @return
+     */
 	public Object instantiate(RootBeanDefinition beanDefinition, String beanName, BeanFactory owner,
 			final Constructor<?> ctor, Object[] args) {
 
@@ -141,6 +154,19 @@ public class SimpleInstantiationStrategy implements InstantiationStrategy {
 				"Method Injection not supported in SimpleInstantiationStrategy");
 	}
 
+	/**
+	 * 工厂方法实例化，则直接使用反射创建对象，
+	 * @param beanDefinition bean definition
+	 * @param beanName name of the bean when it's created in this context.
+	 * The name can be {@code null} if we're autowiring a bean
+	 * that doesn't belong to the factory.
+	 * @param owner owning BeanFactory
+	 * @param factoryBean the factory bean instance to call the factory method on,
+	 * or {@code null} in case of a static factory method
+	 * @param factoryMethod the factory method to use
+	 * @param args the factory method arguments to apply
+	 * @return
+	 */
 	public Object instantiate(RootBeanDefinition beanDefinition, String beanName, BeanFactory owner,
 			Object factoryBean, final Method factoryMethod, Object[] args) {
 
