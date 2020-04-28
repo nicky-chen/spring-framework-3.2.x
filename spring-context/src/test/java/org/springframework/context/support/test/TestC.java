@@ -1,9 +1,3 @@
-/*
- * File Name:TestC is created on 2020/4/24下午5:15 by nicky_chen
- *
- * Copyright (c) 2020, xiaoyujiaoyu technology All Rights Reserved.
- * 
- */
 package org.springframework.context.support.test;
 
 import org.springframework.beans.factory.annotation.Autowired;
