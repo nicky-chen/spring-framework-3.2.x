@@ -55,6 +55,7 @@ public class PropertySourcesPropertyResolverTests {
 	public void containsProperty() {
 		assertThat(propertyResolver.containsProperty("foo"), is(false));
 		testProperties.put("foo", "bar");
+        System.err.println(propertyResolver.resolvePlaceholders("my name is ${foo}"));
 		assertThat(propertyResolver.containsProperty("foo"), is(true));
 	}
 

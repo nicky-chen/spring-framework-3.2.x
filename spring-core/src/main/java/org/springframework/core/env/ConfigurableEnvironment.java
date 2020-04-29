@@ -19,6 +19,7 @@ package org.springframework.core.env;
 import java.util.Map;
 
 /**
+ * 提供设置激活的 profile 和默认的 profile 的功能以及操作 Properties 的工具
  * Configuration interface to be implemented by most if not all {@link Environment} types.
  * Provides facilities for setting active and default profiles and manipulating underlying
  * property sources. Allows clients to set and validate required properties, customize the
@@ -72,6 +73,7 @@ import java.util.Map;
 public interface ConfigurableEnvironment extends Environment, ConfigurablePropertyResolver {
 
 	/**
+     * 设置可使用环境
 	 * Specify the set of profiles active for this {@code Environment}. Profiles are
 	 * evaluated during container bootstrap to determine whether bean definitions
 	 * should be registered with the container.
@@ -87,6 +89,7 @@ public interface ConfigurableEnvironment extends Environment, ConfigurableProper
 	void setActiveProfiles(String... profiles);
 
 	/**
+     * 增加可用环境
 	 * Add a profile to the current set of active profiles.
 	 * @see #setActiveProfiles
 	 * @throws IllegalArgumentException if the profile is null, empty or whitespace-only
@@ -94,6 +97,7 @@ public interface ConfigurableEnvironment extends Environment, ConfigurableProper
 	void addActiveProfile(String profile);
 
 	/**
+     * 默认可用环境
 	 * Specify the set of profiles to be made active by default if no other profiles
 	 * are explicitly made active through {@link #setActiveProfiles}.
 	 * @see AbstractEnvironment#DEFAULT_PROFILES_PROPERTY_NAME

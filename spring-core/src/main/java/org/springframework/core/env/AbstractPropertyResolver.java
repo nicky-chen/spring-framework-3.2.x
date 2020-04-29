@@ -28,6 +28,7 @@ import org.springframework.util.PropertyPlaceholderHelper;
 import org.springframework.util.SystemPropertyUtils;
 
 /**
+ * 解析属性文件的抽象基类
  * Abstract base class for resolving properties against any underlying source.
  *
  * @author Chris Beams
@@ -38,21 +39,27 @@ public abstract class AbstractPropertyResolver implements ConfigurablePropertyRe
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
+    // 类型转换器
 	protected ConfigurableConversionService conversionService = new DefaultConversionService();
 
 	private PropertyPlaceholderHelper nonStrictHelper;
 
 	private PropertyPlaceholderHelper strictHelper;
 
-	private boolean ignoreUnresolvableNestedPlaceholders = false;
+    // 设置是否抛出异常
+    private boolean ignoreUnresolvableNestedPlaceholders = false;
 
-	private String placeholderPrefix = SystemPropertyUtils.PLACEHOLDER_PREFIX;
+    // 占位符前缀
+    private String placeholderPrefix = SystemPropertyUtils.PLACEHOLDER_PREFIX;
 
-	private String placeholderSuffix = SystemPropertyUtils.PLACEHOLDER_SUFFIX;
+    // 占位符后缀
+    private String placeholderSuffix = SystemPropertyUtils.PLACEHOLDER_SUFFIX;
 
-	private String valueSeparator = SystemPropertyUtils.VALUE_SEPARATOR;
+    // 与默认值的分割
+    private String valueSeparator = SystemPropertyUtils.VALUE_SEPARATOR;
 
-	private final Set<String> requiredProperties = new LinkedHashSet<String>();
+    // 必须要有的字段值
+    private final Set<String> requiredProperties = new LinkedHashSet<String>();
 
 
 	public ConfigurableConversionService getConversionService() {
@@ -165,6 +172,7 @@ public abstract class AbstractPropertyResolver implements ConfigurablePropertyRe
 	}
 
 	/**
+     * 解析嵌套的占位符
 	 * Resolve placeholders within the given string, deferring to the value of
 	 * {@link #setIgnoreUnresolvableNestedPlaceholders} to determine whether any
 	 * unresolvable placeholders should raise an exception or be ignored.

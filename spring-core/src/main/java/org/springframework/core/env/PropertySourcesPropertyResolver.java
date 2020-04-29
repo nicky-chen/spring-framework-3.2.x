@@ -20,6 +20,7 @@ import org.springframework.core.convert.ConversionException;
 import org.springframework.util.ClassUtils;
 
 /**
+ * 一组 PropertySources 提供属性解析服务
  * {@link PropertyResolver} implementation that resolves property values against
  * an underlying set of {@link PropertySources}.
  *
