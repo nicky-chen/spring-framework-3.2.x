@@ -99,7 +99,7 @@ public class PropertyOverrideConfigurer extends PropertyResourceConfigurer {
 	@Override
 	protected void processProperties(ConfigurableListableBeanFactory beanFactory, Properties props)
 			throws BeansException {
-
+		// 迭代配置文件中的内容
 		for (Enumeration names = props.propertyNames(); names.hasMoreElements();) {
 			String key = (String) names.nextElement();
 			try {

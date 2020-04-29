@@ -79,6 +79,7 @@ public class BeanDefinitionVisitor {
 		visitFactoryBeanName(beanDefinition);
 		visitFactoryMethodName(beanDefinition);
 		visitScope(beanDefinition);
+		// 解析相应的属性
 		visitPropertyValues(beanDefinition.getPropertyValues());
 		ConstructorArgumentValues cas = beanDefinition.getConstructorArgumentValues();
 		visitIndexedArgumentValues(cas.getIndexedArgumentValues());
@@ -270,6 +271,7 @@ public class BeanDefinitionVisitor {
 	}
 
 	/**
+	 * 用于解析占位符
 	 * Resolve the given String value, for example parsing placeholders.
 	 * @param strVal the original String value
 	 * @return the resolved String value
