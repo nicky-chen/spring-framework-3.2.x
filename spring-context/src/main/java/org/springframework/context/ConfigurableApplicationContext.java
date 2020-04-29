@@ -86,12 +86,14 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 
 
 	/**
+	 * ApplicationContext 设置唯一 ID
 	 * Set the unique id of this application context.
 	 * @since 3.0
 	 */
 	void setId(String id);
 
 	/**
+     * 为 ApplicationContext 设置 parent
 	 * Set the parent of this application context.
 	 * <p>Note that the parent shouldn't be changed: It should only be set outside
 	 * a constructor if it isn't available when an object of this class is created,
@@ -108,6 +110,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 	ConfigurableEnvironment getEnvironment();
 
 	/**
+     * 设置 Environment
 	 * Set the {@code Environment} for this application context.
 	 * @param environment the new environment
 	 * @since 3.1
@@ -135,6 +138,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 	void addApplicationListener(ApplicationListener<?> listener);
 
 	/**
+     * 加载或者刷新配置
 	 * Load or refresh the persistent representation of the configuration,
 	 * which might an XML file, properties file, or relational database schema.
 	 * <p>As this is a startup method, it should destroy already created singletons
@@ -147,6 +151,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 	void refresh() throws BeansException, IllegalStateException;
 
 	/**
+     * 注册关闭容器钩子方法
 	 * Register a shutdown hook with the JVM runtime, closing this context
 	 * on JVM shutdown unless it has already been closed at that time.
 	 * <p>This method can be called multiple times. Only one shutdown hook
@@ -167,6 +172,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 	void close();
 
 	/**
+     * ApplicationContext 是否处于激活状态
 	 * Determine whether this application context is active, that is,
 	 * whether it has been refreshed at least once and has not been closed yet.
 	 * @return whether the context is still active
@@ -177,6 +183,7 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 	boolean isActive();
 
 	/**
+     * 获取当前上下文的 BeanFactory
 	 * Return the internal bean factory of this application context.
 	 * Can be used to access specific functionality of the underlying factory.
 	 * <p>Note: Do not use this to post-process the bean factory; singletons
