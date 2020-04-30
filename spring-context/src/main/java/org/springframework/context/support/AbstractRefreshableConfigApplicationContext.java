@@ -69,6 +69,7 @@ public abstract class AbstractRefreshableConfigApplicationContext extends Abstra
 	}
 
 	/**
+	 * 设置配置文件路径
 	 * Set the config locations for this application context.
 	 * <p>If not set, the implementation may use a default as appropriate.
 	 */
@@ -112,6 +113,7 @@ public abstract class AbstractRefreshableConfigApplicationContext extends Abstra
 	}
 
 	/**
+     * 获取容器环境，并解析路径
 	 * Resolve the given path, replacing placeholders with corresponding
 	 * environment property values if necessary. Applied to config locations.
 	 * @param path the original file path
