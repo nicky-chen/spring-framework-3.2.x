@@ -1,5 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [开头](#%E5%BC%80%E5%A4%B4)
@@ -72,8 +70,6 @@
 - [拾遗](#%E6%8B%BE%E9%81%97)
   - [AOP切面的坑](#aop%E5%88%87%E9%9D%A2%E7%9A%84%E5%9D%91)
     - [总结](#%E6%80%BB%E7%BB%93-2)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 # 开头
 

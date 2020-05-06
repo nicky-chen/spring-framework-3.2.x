@@ -99,15 +99,17 @@ class ConfigBeanDefinitionParser implements BeanDefinitionParser {
 		CompositeComponentDefinition compositeDef =
 				new CompositeComponentDefinition(element.getTagName(), parserContext.extractSource(element));
 		parserContext.pushContainingComponent(compositeDef);
-
+		// 是否生成代理类
 		configureAutoProxyCreator(parserContext, element);
 
 		List<Element> childElts = DomUtils.getChildElements(element);
 		for (Element elt: childElts) {
 			String localName = parserContext.getDelegate().getLocalName(elt);
+			// 解析aop:pointcut
 			if (POINTCUT.equals(localName)) {
 				parsePointcut(elt, parserContext);
 			}
+			// 解析aop:advisor
 			else if (ADVISOR.equals(localName)) {
 				parseAdvisor(elt, parserContext);
 			}
@@ -136,12 +138,14 @@ class ConfigBeanDefinitionParser implements BeanDefinitionParser {
 	 * with the supplied {@link BeanDefinitionRegistry}.
 	 */
 	private void parseAdvisor(Element advisorElement, ParserContext parserContext) {
+	    // 创建类型为DefaultBeanFactoryPointcutAdvisor的 bean
 		AbstractBeanDefinition advisorDef = createAdvisorBeanDefinition(advisorElement, parserContext);
 		String id = advisorElement.getAttribute(ID);
 
 		try {
 			this.parseState.push(new AdvisorEntry(id));
 			String advisorBeanName = id;
+			// 注册beanDefinition
 			if (StringUtils.hasText(advisorBeanName)) {
 				parserContext.getRegistry().registerBeanDefinition(advisorBeanName, advisorDef);
 			}
@@ -149,7 +153,9 @@ class ConfigBeanDefinitionParser implements BeanDefinitionParser {
 				advisorBeanName = parserContext.getReaderContext().registerWithGeneratedName(advisorDef);
 			}
 
+			// 解析属性pointcut或者pointcut-ref属性，优先匹配pointcut属性
 			Object pointcut = parsePointcutProperty(advisorElement, parserContext);
+			// 新增属性并注册组件
 			if (pointcut instanceof BeanDefinition) {
 				advisorDef.getPropertyValues().add(POINTCUT, pointcut);
 				parserContext.registerComponent(
@@ -180,6 +186,7 @@ class ConfigBeanDefinitionParser implements BeanDefinitionParser {
 					"'advice-ref' attribute contains empty value.", advisorElement, this.parseState.snapshot());
 		}
 		else {
+		    // 增加属性
 			advisorDefinition.getPropertyValues().add(
 					ADVICE_BEAN_NAME, new RuntimeBeanNameReference(adviceRef));
 		}
@@ -438,17 +445,19 @@ class ConfigBeanDefinitionParser implements BeanDefinitionParser {
 
 		try {
 			this.parseState.push(new PointcutEntry(id));
+			// 创建一个原型bean
 			pointcutDefinition = createPointcutDefinition(expression);
 			pointcutDefinition.setSource(parserContext.extractSource(pointcutElement));
 
 			String pointcutBeanName = id;
+			// 注册bean
 			if (StringUtils.hasText(pointcutBeanName)) {
 				parserContext.getRegistry().registerBeanDefinition(pointcutBeanName, pointcutDefinition);
 			}
 			else {
 				pointcutBeanName = parserContext.getReaderContext().registerWithGeneratedName(pointcutDefinition);
 			}
-
+			// 注册组件
 			parserContext.registerComponent(
 					new PointcutComponentDefinition(pointcutBeanName, pointcutDefinition, expression));
 		}
