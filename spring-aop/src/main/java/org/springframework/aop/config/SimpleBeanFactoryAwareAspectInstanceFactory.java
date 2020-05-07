@@ -56,6 +56,7 @@ public class SimpleBeanFactoryAwareAspectInstanceFactory implements AspectInstan
 
 
 	/**
+	 * 获取切面bean
 	 * Look up the aspect bean from the {@link BeanFactory} and returns it.
 	 * @see #setAspectBeanName
 	 */
