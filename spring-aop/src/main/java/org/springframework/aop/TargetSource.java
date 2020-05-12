@@ -17,6 +17,7 @@
 package org.springframework.aop;
 
 /**
+ * aop代理目标源对象
  * A {@code TargetSource} is used to obtain the current "target" of
  * an AOP invocation, which will be invoked via reflection if no around
  * advice chooses to end the interceptor chain itself.
@@ -42,6 +43,7 @@ public interface TargetSource extends TargetClassAware {
 	Class<?> getTargetClass();
 
 	/**
+     * 是否是静态
 	 * Will all calls to {@link #getTarget()} return the same object?
 	 * <p>In that case, there will be no need to invoke
 	 * {@link #releaseTarget(Object)}, and the AOP framework can cache
@@ -52,6 +54,7 @@ public interface TargetSource extends TargetClassAware {
 	boolean isStatic();
 
 	/**
+     * 获取目标实例对象
 	 * Return a target instance. Invoked immediately before the
 	 * AOP framework calls the "target" of an AOP method invocation.
 	 * @return the target object, which contains the joinpoint
@@ -59,7 +62,7 @@ public interface TargetSource extends TargetClassAware {
 	 */
 	Object getTarget() throws Exception;
 
-	/**
+	/**释放对象
 	 * Release the given target object obtained from the
 	 * {@link #getTarget()} method.
 	 * @param target object obtained from a call to {@link #getTarget()}

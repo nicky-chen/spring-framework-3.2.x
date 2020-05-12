@@ -17,6 +17,7 @@
 package org.springframework.aop;
 
 /**
+ * 最小的接口用来暴露代理后面的目标类
  * Minimal interface for exposing the target class behind a proxy.
  *
  * <p>Implemented by AOP proxy objects and proxy factories
@@ -30,6 +31,7 @@ package org.springframework.aop;
 public interface TargetClassAware {
 
 	/**
+	 * 目标对象
 	 * Return the target class behind the implementing object
 	 * (typically a proxy configuration or an actual proxy).
 	 * @return the target Class, or {@code null} if not known

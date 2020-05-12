@@ -57,9 +57,11 @@ public abstract class AbstractBeanFactoryBasedTargetSource implements TargetSour
     protected final Log logger = LogFactory.getLog(getClass());
 
     /** Name of the target bean we will create on each invocation */
+    // 目标bean的名称
     private String targetBeanName;
 
     /** Class of the target */
+    // 目标类
     private Class<?> targetClass;
 
     /**
@@ -117,7 +119,10 @@ public abstract class AbstractBeanFactoryBasedTargetSource implements TargetSour
         return this.beanFactory;
     }
 
-
+    /**
+     * 获取目标类
+     * @return
+     */
     public synchronized Class<?> getTargetClass() {
         if (this.targetClass == null && this.beanFactory != null) {
             // Determine type of the target bean.

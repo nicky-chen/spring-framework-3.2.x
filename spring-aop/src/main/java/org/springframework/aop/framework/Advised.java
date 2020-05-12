@@ -44,17 +44,20 @@ public interface Advised extends TargetClassAware {
 	boolean isFrozen();
 
 	/**
+	 * 是否是代理目标类
 	 * Are we proxying the full target class instead of specified interfaces?
 	 */
 	boolean isProxyTargetClass();
 
 	/**
+     * 返回被代理的接口不包含目标类
 	 * Return the interfaces proxied by the AOP proxy. Will not
 	 * include the target class, which may also be proxied.
 	 */
 	Class<?>[] getProxiedInterfaces();
 
 	/**
+     * 确定接口是否被代理
 	 * Determine whether the given interface is proxied.
 	 * @param intf the interface to check
 	 */
@@ -74,6 +77,7 @@ public interface Advised extends TargetClassAware {
 	TargetSource getTargetSource();
 
 	/**
+     * 设置是否暴露代理给spring
 	 * Set whether the proxy should be exposed by the AOP framework as a
 	 * ThreadLocal for retrieval via the AopContext class. This is useful
 	 * if an advised object needs to call another advised method on itself.
@@ -83,6 +87,7 @@ public interface Advised extends TargetClassAware {
 	void setExposeProxy(boolean exposeProxy);
 
 	/**
+     * 是否暴露代理给spring
 	 * Return whether the factory should expose the proxy as a ThreadLocal.
 	 * This can be necessary if a target object needs to invoke a method on itself
 	 * benefitting from advice. (If it invokes a method on {@code this} no advice

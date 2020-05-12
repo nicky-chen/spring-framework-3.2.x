@@ -57,6 +57,7 @@ public class BeanFactoryAdvisorRetrievalHelper {
 
 
 	/**
+     * 在beanFactory中查找所有满足条件的Advisor
 	 * Find all eligible Advisor beans in the current bean factory,
 	 * ignoring FactoryBeans and excluding beans that are currently in creation.
 	 * @return the list of {@link org.springframework.aop.Advisor} beans
@@ -66,22 +67,27 @@ public class BeanFactoryAdvisorRetrievalHelper {
 		// Determine list of advisor bean names, if not cached already.
 		String[] advisorNames = null;
 		synchronized (this) {
-			advisorNames = this.cachedAdvisorBeanNames;
+            // 结果缓存
+            advisorNames = this.cachedAdvisorBeanNames;
 			if (advisorNames == null) {
 				// Do not initialize FactoryBeans here: We need to leave all regular beans
 				// uninitialized to let the auto-proxy creator apply to them!
-				advisorNames = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(
+                // 去容器中寻找
+                advisorNames = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(
 						this.beanFactory, Advisor.class, true, false);
 				this.cachedAdvisorBeanNames = advisorNames;
 			}
 		}
+		// 结果集为空直接返回空集合
 		if (advisorNames.length == 0) {
 			return new LinkedList<Advisor>();
 		}
 
 		List<Advisor> advisors = new LinkedList<Advisor>();
 		for (String name : advisorNames) {
+		    // 是否是符合条件的bean
 			if (isEligibleBean(name)) {
+			    // 跳过正在创建的bean
 				if (this.beanFactory.isCurrentlyInCreation(name)) {
 					if (logger.isDebugEnabled()) {
 						logger.debug("Skipping currently created advisor '" + name + "'");

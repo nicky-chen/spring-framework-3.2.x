@@ -269,12 +269,15 @@ public abstract class AbstractAutoProxyCreator extends ProxyConfig
 	}
 
 	public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
+		// 获取缓存key
 		Object cacheKey = getCacheKey(beanClass, beanName);
 
+		// beanName 为空或者不在targetSourcedBeans里面直接则进入
 		if (beanName == null || !this.targetSourcedBeans.containsKey(beanName)) {
 			if (this.advisedBeans.containsKey(cacheKey)) {
 				return null;
 			}
+			// 是否是基础的类或者需要跳过的类
 			if (isInfrastructureClass(beanClass) || shouldSkip(beanClass, beanName)) {
 				this.advisedBeans.put(cacheKey, Boolean.FALSE);
 				return null;
@@ -284,6 +287,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyConfig
 		// Create proxy here if we have a custom TargetSource.
 		// Suppresses unnecessary default instantiation of the target bean:
 		// The TargetSource will handle target instances in a custom fashion.
+		// 创建代理
 		if (beanName != null) {
 			TargetSource targetSource = getCustomTargetSource(beanClass, beanName);
 			if (targetSource != null) {
