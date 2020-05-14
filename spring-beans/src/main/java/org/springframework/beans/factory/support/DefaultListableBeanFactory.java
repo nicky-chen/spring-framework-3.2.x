@@ -613,11 +613,15 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		}
 
 		// Trigger initialization of all non-lazy singleton beans...
+		// 触发所有非懒加载单例bean的初始化
 		for (String beanName : beanNames) {
 			RootBeanDefinition bd = getMergedLocalBeanDefinition(beanName);
-			if (!bd.isAbstract() && bd.isSingleton() && !bd.isLazyInit()) {
+            // 判断是否是懒加载单例bean，如果是单例的并且不是懒加载的则在Spring 容器
+            if (!bd.isAbstract() && bd.isSingleton() && !bd.isLazyInit()) {
+                // 是否是工厂bean
 				if (isFactoryBean(beanName)) {
 					final FactoryBean<?> factory = (FactoryBean<?>) getBean(FACTORY_BEAN_PREFIX + beanName);
+					// 是否需要提前初始化
 					boolean isEagerInit;
 					if (System.getSecurityManager() != null && factory instanceof SmartFactoryBean) {
 						isEagerInit = AccessController.doPrivileged(new PrivilegedAction<Boolean>() {
