@@ -383,7 +383,6 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 			return Ordered.HIGHEST_PRECEDENCE;
 		}
 
-		@Override
 		public Object postProcessBeforeInitialization(Object bean, String beanName)  {
 			if (bean instanceof ImportAware) {
 				ImportRegistry importRegistry = this.beanFactory.getBean(IMPORT_REGISTRY_BEAN_NAME, ImportRegistry.class);

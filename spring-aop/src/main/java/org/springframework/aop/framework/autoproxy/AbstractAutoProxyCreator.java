@@ -466,8 +466,9 @@ public abstract class AbstractAutoProxyCreator extends ProxyConfig
 	    // 创建代理工厂
 		ProxyFactory proxyFactory = new ProxyFactory();
 		// Copy our properties (proxyTargetClass etc) inherited from ProxyConfig.
+		// 拷贝当前类中的相关属性
 		proxyFactory.copyFrom(this);
-
+        //判定给定的bean是否代理Class
 		if (!shouldProxyTargetClass(beanClass, beanName)) {
 			// Must allow for introductions; can't just set interfaces to
 			// the target's interfaces only.
@@ -482,9 +483,10 @@ public abstract class AbstractAutoProxyCreator extends ProxyConfig
 		for (Advisor advisor : advisors) {
 			proxyFactory.addAdvisor(advisor);
 		}
-
+        // 设置目标类
 		proxyFactory.setTargetSource(targetSource);
 		customizeProxyFactory(proxyFactory);
+        // 设置是否冻结，默认为false即代理设置后不允许修改代理的配置
 		proxyFactory.setFrozen(this.freezeProxy);
 		if (advisorsPreFiltered()) {
 			proxyFactory.setPreFiltered(true);
