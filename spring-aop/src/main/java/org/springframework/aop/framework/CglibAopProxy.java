@@ -186,7 +186,7 @@ final class CglibAopProxy implements AopProxy, Serializable {
 			enhancer.setNamingPolicy(SpringNamingPolicy.INSTANCE);
 			enhancer.setStrategy(new MemorySafeUndeclaredThrowableStrategy(UndeclaredThrowableException.class));
 			enhancer.setInterceptDuringConstruction(false);
-
+            // 设置各种Interceptor
 			Callback[] callbacks = getCallbacks(rootClass);
 			Class<?>[] types = new Class<?>[callbacks.length];
 			for (int x = 0; x < types.length; x++) {
@@ -694,9 +694,11 @@ final class CglibAopProxy implements AopProxy, Serializable {
 		 */
 		@Override
 		protected Object invokeJoinpoint() throws Throwable {
+			// 如果是protect的访问修饰符就执行原生的反射方法
 			if (this.protectedMethod) {
 				return super.invokeJoinpoint();
 			}
+			// 否则执行代理
 			else {
 				return this.methodProxy.invoke(this.target, this.arguments);
 			}
