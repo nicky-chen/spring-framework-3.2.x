@@ -19,6 +19,7 @@ package org.springframework.transaction;
 import java.sql.Connection;
 
 /**
+ * 事务属性基本配置
  * Interface that defines Spring-compliant transaction properties.
  * Based on the propagation behavior definitions analogous to EJB CMT attributes.
  *
@@ -44,6 +45,7 @@ import java.sql.Connection;
 public interface TransactionDefinition {
 
 	/**
+     * 支持当前事务，如果当前事务不存在则创建一个新事务
 	 * Support a current transaction; create a new one if none exists.
 	 * Analogous to the EJB transaction attribute of the same name.
 	 * <p>This is typically the default setting of a transaction definition,
@@ -73,6 +75,7 @@ public interface TransactionDefinition {
 	int PROPAGATION_SUPPORTS = 1;
 
 	/**
+     * 支持当前事务，没有事务抛异常
 	 * Support a current transaction; throw an exception if no current transaction
 	 * exists. Analogous to the EJB transaction attribute of the same name.
 	 * <p>Note that transaction synchronization within a {@code PROPAGATION_MANDATORY}
@@ -81,6 +84,7 @@ public interface TransactionDefinition {
 	int PROPAGATION_MANDATORY = 2;
 
 	/**
+     * 创建新事务，挂起当前事务
 	 * Create a new transaction, suspending the current transaction if one exists.
 	 * Analogous to the EJB transaction attribute of the same name.
 	 * <p><b>NOTE:</b> Actual transaction suspension will not work out-of-the-box
@@ -96,6 +100,7 @@ public interface TransactionDefinition {
 	int PROPAGATION_REQUIRES_NEW = 3;
 
 	/**
+     * 不支持当前事务
 	 * Do not support a current transaction; rather always execute non-transactionally.
 	 * Analogous to the EJB transaction attribute of the same name.
 	 * <p><b>NOTE:</b> Actual transaction suspension will not work out-of-the-box
@@ -111,6 +116,7 @@ public interface TransactionDefinition {
 	int PROPAGATION_NOT_SUPPORTED = 4;
 
 	/**
+     * 不支持事务，有事务抛异常
 	 * Do not support a current transaction; throw an exception if a current transaction
 	 * exists. Analogous to the EJB transaction attribute of the same name.
 	 * <p>Note that transaction synchronization is <i>not</i> available within a
@@ -192,6 +198,7 @@ public interface TransactionDefinition {
 
 
 	/**
+     * 传播行为
 	 * Return the propagation behavior.
 	 * <p>Must return one of the {@code PROPAGATION_XXX} constants
 	 * defined on {@link TransactionDefinition this interface}.
@@ -202,6 +209,7 @@ public interface TransactionDefinition {
 	int getPropagationBehavior();
 
 	/**
+     * 隔离级别
 	 * Return the isolation level.
 	 * <p>Must return one of the {@code ISOLATION_XXX} constants
 	 * defined on {@link TransactionDefinition this interface}.
@@ -214,6 +222,7 @@ public interface TransactionDefinition {
 	int getIsolationLevel();
 
 	/**
+     * 超时时间
 	 * Return the transaction timeout.
 	 * <p>Must return a number of seconds, or {@link #TIMEOUT_DEFAULT}.
 	 * <p>Only makes sense in combination with {@link #PROPAGATION_REQUIRED}
@@ -225,6 +234,7 @@ public interface TransactionDefinition {
 	int getTimeout();
 
 	/**
+     * 是否是只读事务
 	 * Return whether to optimize as a read-only transaction.
 	 * <p>The read-only flag applies to any transaction context, whether
 	 * backed by an actual resource transaction
@@ -244,6 +254,7 @@ public interface TransactionDefinition {
 	boolean isReadOnly();
 
 	/**
+     * 事务名称
 	 * Return the name of this transaction. Can be {@code null}.
 	 * <p>This will be used as the transaction name to be shown in a
 	 * transaction monitor, if applicable (for example, WebLogic's).

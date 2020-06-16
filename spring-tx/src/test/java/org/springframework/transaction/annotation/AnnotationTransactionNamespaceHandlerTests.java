@@ -114,7 +114,6 @@ public class AnnotationTransactionNamespaceHandlerTests extends TestCase {
 			return null;
 		}
 
-		@Transactional
 		public void saveFoo() {
 		}
 

@@ -144,6 +144,8 @@ public abstract class TransactionSynchronizationManager {
 	}
 
 	/**
+	 * 是否存在事务指的是在当前线程、当前数据源(DataSource)中是否存在处于活动状态的事务**。
+	 *
 	 * Actually check the value of the resource that is bound for the given key.
 	 */
 	private static Object doGetResource(Object actualKey) {
@@ -196,6 +198,7 @@ public abstract class TransactionSynchronizationManager {
 	}
 
 	/**
+     * 解绑数据源对应的事务信息
 	 * Unbind a resource for the given key from the current thread.
 	 * @param key the key to unbind (usually the resource factory)
 	 * @return the previously bound value (usually the active resource object)

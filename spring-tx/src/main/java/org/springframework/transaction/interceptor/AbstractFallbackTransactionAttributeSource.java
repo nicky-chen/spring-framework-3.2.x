@@ -73,6 +73,7 @@ public abstract class AbstractFallbackTransactionAttributeSource implements Tran
 
 
 	/**
+	 * 确定执行方法的事务属性
 	 * Determine the transaction attribute for this method invocation.
 	 * <p>Defaults to the class's transaction attribute if no method attribute is found.
 	 * @param method the method for the current invocation (never {@code null})
@@ -84,6 +85,7 @@ public abstract class AbstractFallbackTransactionAttributeSource implements Tran
 		// First, see if we have a cached value.
 		Object cacheKey = getCacheKey(method, targetClass);
 		Object cached = this.attributeCache.get(cacheKey);
+		// 读取缓存事务属性，缓存没有就解析并放入缓存
 		if (cached != null) {
 			// Value will either be canonical value indicating there is no transaction attribute,
 			// or an actual transaction attribute.
@@ -91,6 +93,7 @@ public abstract class AbstractFallbackTransactionAttributeSource implements Tran
 				return null;
 			}
 			else {
+			    // 根据@transacation注解返回对应信息 RuleBasedTransactionAttribute
 				return (TransactionAttribute) cached;
 			}
 		}
@@ -142,15 +145,18 @@ public abstract class AbstractFallbackTransactionAttributeSource implements Tran
 		// If the target class is null, the method will be unchanged.
 		Method specificMethod = ClassUtils.getMostSpecificMethod(method, userClass);
 		// If we are dealing with method with generic parameters, find the original method.
+        // 如果我们处理的是一个泛型参数的方法，则获取他的源方法
 		specificMethod = BridgeMethodResolver.findBridgedMethod(specificMethod);
 
 		// First try is the method in the target class.
+        // 首先在方法上获取事务的属性
 		TransactionAttribute txAtt = findTransactionAttribute(specificMethod);
 		if (txAtt != null) {
 			return txAtt;
 		}
 
 		// Second try is the transaction attribute on the target class.
+        // 在类上获取事务的属性
 		txAtt = findTransactionAttribute(specificMethod.getDeclaringClass());
 		if (txAtt != null) {
 			return txAtt;
