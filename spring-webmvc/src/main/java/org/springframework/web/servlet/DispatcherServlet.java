@@ -442,6 +442,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	 */
 	@Override
 	protected void onRefresh(ApplicationContext context) {
+		// 初始化mvc
 		initStrategies(context);
 	}
 

@@ -90,6 +90,7 @@ public class DefaultTransactionAttribute extends DefaultTransactionDefinition im
 	}
 
 	/**
+	 * 默认出发回滚的异常
 	 * The default behavior is as with EJB: rollback on unchecked exception.
 	 * Additionally attempt to rollback on Error.
 	 * <p>This is consistent with TransactionTemplate's default behavior.

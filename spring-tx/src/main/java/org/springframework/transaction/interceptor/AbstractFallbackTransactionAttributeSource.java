@@ -98,6 +98,7 @@ public abstract class AbstractFallbackTransactionAttributeSource implements Tran
 			}
 		}
 		else {
+			// 缓存为空
 			// We need to work it out.
 			TransactionAttribute txAtt = computeTransactionAttribute(method, targetClass);
 			// Put it in the cache.
@@ -135,6 +136,7 @@ public abstract class AbstractFallbackTransactionAttributeSource implements Tran
 	 */
 	private TransactionAttribute computeTransactionAttribute(Method method, Class<?> targetClass) {
 		// Don't allow no-public methods as required.
+        // 不允许非public访问权限的方法代理
 		if (allowPublicMethodsOnly() && !Modifier.isPublic(method.getModifiers())) {
 			return null;
 		}

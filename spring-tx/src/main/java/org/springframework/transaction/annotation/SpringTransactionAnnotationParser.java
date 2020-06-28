@@ -54,7 +54,8 @@ public class SpringTransactionAnnotationParser implements TransactionAnnotationP
 		rbta.setQualifier(ann.value());
 		ArrayList<RollbackRuleAttribute> rollBackRules = new ArrayList<RollbackRuleAttribute>();
 		Class[] rbf = ann.rollbackFor();
-		for (Class rbRule : rbf) {
+        // 回滚规则
+        for (Class rbRule : rbf) {
 			RollbackRuleAttribute rule = new RollbackRuleAttribute(rbRule);
 			rollBackRules.add(rule);
 		}
@@ -63,6 +64,7 @@ public class SpringTransactionAnnotationParser implements TransactionAnnotationP
 			RollbackRuleAttribute rule = new RollbackRuleAttribute(rbRule);
 			rollBackRules.add(rule);
 		}
+		// 不需要回滚异常的规则
 		Class[] nrbf = ann.noRollbackFor();
 		for (Class rbRule : nrbf) {
 			NoRollbackRuleAttribute rule = new NoRollbackRuleAttribute(rbRule);

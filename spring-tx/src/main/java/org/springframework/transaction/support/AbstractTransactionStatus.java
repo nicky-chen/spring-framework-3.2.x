@@ -146,7 +146,9 @@ public abstract class AbstractTransactionStatus implements TransactionStatus {
 		if (!hasSavepoint()) {
 			throw new TransactionUsageException("No savepoint associated with current transaction");
 		}
+		// 数据库回滚savepoint
 		getSavepointManager().rollbackToSavepoint(getSavepoint());
+		// 删除savepoint
 		setSavepoint(null);
 	}
 

@@ -24,6 +24,7 @@ import org.springframework.transaction.support.ResourceHolderSupport;
 import org.springframework.util.Assert;
 
 /**
+ * 包装connection的对象
  * Connection holder, wrapping a JDBC Connection.
  * {@link DataSourceTransactionManager} binds instances of this class
  * to the thread, for a specific DataSource.
@@ -42,13 +43,24 @@ public class ConnectionHolder extends ResourceHolderSupport {
 
 	public static final String SAVEPOINT_NAME_PREFIX = "SAVEPOINT_";
 
-
+    /**
+     * 连接句柄
+     */
 	private ConnectionHandle connectionHandle;
 
+    /**
+     * 当前连接
+     */
 	private Connection currentConnection;
 
+    /**
+     * 事务是否存活
+     */
 	private boolean transactionActive = false;
 
+    /**
+     * 是否支持savepoint
+     */
 	private Boolean savepointsSupported;
 
 	private int savepointCounter = 0;
@@ -113,6 +125,7 @@ public class ConnectionHolder extends ResourceHolderSupport {
 
 	/**
 	 * Return whether this holder represents an active, JDBC-managed transaction.
+     * 是否当前数据库连接的持有者是一个活跃的jdbc事务
 	 */
 	protected boolean isTransactionActive() {
 		return this.transactionActive;

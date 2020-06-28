@@ -459,6 +459,7 @@ public abstract class FrameworkServlet extends HttpServletBean {
 		long startTime = System.currentTimeMillis();
 
 		try {
+		    // 初始化applicationContext
 			this.webApplicationContext = initWebApplicationContext();
 			initFrameworkServlet();
 		}
@@ -488,13 +489,15 @@ public abstract class FrameworkServlet extends HttpServletBean {
 	 * @see #setContextConfigLocation
 	 */
 	protected WebApplicationContext initWebApplicationContext() {
+        //根容器查找
 		WebApplicationContext rootContext =
 				WebApplicationContextUtils.getWebApplicationContext(getServletContext());
 		WebApplicationContext wac = null;
 
 		if (this.webApplicationContext != null) {
 			// A context instance was injected at construction time -> use it
-			wac = this.webApplicationContext;
+            //有可能DispatcherServlet被作为Spring bean初始化，且webApplicationContext已被注入进来
+            wac = this.webApplicationContext;
 			if (wac instanceof ConfigurableWebApplicationContext) {
 				ConfigurableWebApplicationContext cwac = (ConfigurableWebApplicationContext) wac;
 				if (!cwac.isActive()) {
@@ -505,6 +508,7 @@ public abstract class FrameworkServlet extends HttpServletBean {
 						// the root application context (if any; may be null) as the parent
 						cwac.setParent(rootContext);
 					}
+					// 配置刷新容器
 					configureAndRefreshWebApplicationContext(cwac);
 				}
 			}
@@ -514,10 +518,12 @@ public abstract class FrameworkServlet extends HttpServletBean {
 			// has been registered in the servlet context. If one exists, it is assumed
 			// that the parent context (if any) has already been set and that the
 			// user has performed any initialization such as setting the context id
-			wac = findWebApplicationContext();
+            //没有被注入则查找是否已经存在于ServletContext中
+            wac = findWebApplicationContext();
 		}
 		if (wac == null) {
 			// No context instance is defined for this servlet -> create a local one
+            // 还是没有则手动创建容器
 			wac = createWebApplicationContext(rootContext);
 		}
 
@@ -565,6 +571,7 @@ public abstract class FrameworkServlet extends HttpServletBean {
 	}
 
 	/**
+     * 实例化容器
 	 * Instantiate the WebApplicationContext for this servlet, either a default
 	 * {@link org.springframework.web.context.support.XmlWebApplicationContext}
 	 * or a {@link #setContextClass custom context class}, if set.
@@ -598,14 +605,15 @@ public abstract class FrameworkServlet extends HttpServletBean {
 		wac.setEnvironment(getEnvironment());
 		wac.setParent(parent);
 		wac.setConfigLocation(getContextConfigLocation());
-
+		// 配置刷新容器
 		configureAndRefreshWebApplicationContext(wac);
 
 		return wac;
 	}
 
 	protected void configureAndRefreshWebApplicationContext(ConfigurableWebApplicationContext wac) {
-		if (ObjectUtils.identityToString(wac).equals(wac.getId())) {
+		// 添加容器id
+	    if (ObjectUtils.identityToString(wac).equals(wac.getId())) {
 			// The application context id is still set to its original default value
 			// -> assign a more useful id based on available information
 			if (this.contextId != null) {

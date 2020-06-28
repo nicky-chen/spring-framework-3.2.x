@@ -17,6 +17,7 @@
 package org.springframework.transaction.support;
 
 /**
+ * 事务同步器用于事务处理操作的回调
  * Interface for transaction synchronization callbacks.
  * Supported by AbstractPlatformTransactionManager.
  *

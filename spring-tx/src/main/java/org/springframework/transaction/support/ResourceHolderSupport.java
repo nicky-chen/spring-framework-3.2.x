@@ -38,6 +38,9 @@ public abstract class ResourceHolderSupport implements ResourceHolder {
 
 	private boolean rollbackOnly = false;
 
+	/**
+	 * 用于timeOut超时
+	 */
 	private Date deadline;
 
 	private int referenceCount = 0;

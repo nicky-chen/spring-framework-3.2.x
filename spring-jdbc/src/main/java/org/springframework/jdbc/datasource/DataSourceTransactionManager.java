@@ -102,6 +102,9 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 public class DataSourceTransactionManager extends AbstractPlatformTransactionManager
 		implements ResourceTransactionManager, InitializingBean {
 
+    /**
+     * 数据源
+     */
 	private DataSource dataSource;
 
 
@@ -111,6 +114,7 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 	 * @see #setDataSource
 	 */
 	public DataSourceTransactionManager() {
+	    // 允许嵌套事务
 		setNestedTransactionAllowed(true);
 	}
 
@@ -229,7 +233,7 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 			}
 			// 设置事务为存活状态
 			txObject.getConnectionHolder().setTransactionActive(true);
-			// 设置超时
+			// 设置超时时间点
 			int timeout = determineTimeout(definition);
 			if (timeout != TransactionDefinition.TIMEOUT_DEFAULT) {
 				txObject.getConnectionHolder().setTimeoutInSeconds(timeout);
@@ -243,6 +247,7 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 		}
 
 		catch (Throwable ex) {
+		    // 如果是新事务则释放连接
 			if (txObject.isNewConnectionHolder()) {
 				DataSourceUtils.releaseConnection(con, this.dataSource);
 				txObject.setConnectionHolder(null, false);
@@ -309,13 +314,14 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 	@Override
 	protected void doCleanupAfterCompletion(Object transaction) {
 		DataSourceTransactionObject txObject = (DataSourceTransactionObject) transaction;
-
+		// 如果是新连接就解绑数据源
 		// Remove the connection holder from the thread, if exposed.
 		if (txObject.isNewConnectionHolder()) {
 			TransactionSynchronizationManager.unbindResource(this.dataSource);
 		}
 
 		// Reset connection.
+		// 重置连接
 		Connection con = txObject.getConnectionHolder().getConnection();
 		try {
 			if (txObject.isMustRestoreAutoCommit()) {
@@ -331,6 +337,7 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 			if (logger.isDebugEnabled()) {
 				logger.debug("Releasing JDBC Connection [" + con + "] after transaction");
 			}
+			// 释放
 			DataSourceUtils.releaseConnection(con, this.dataSource);
 		}
 
@@ -344,8 +351,14 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 	 */
 	private static class DataSourceTransactionObject extends JdbcTransactionObjectSupport {
 
+        /**
+         * 是否是一个新的连接持有者
+         */
 		private boolean newConnectionHolder;
 
+        /**
+         * 是否必须还原自动提交
+         */
 		private boolean mustRestoreAutoCommit;
 
 		public void setConnectionHolder(ConnectionHolder connectionHolder, boolean newConnectionHolder) {
@@ -365,6 +378,9 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 			return this.mustRestoreAutoCommit;
 		}
 
+        /**
+         * 发生异常标记位回滚
+         */
 		public void setRollbackOnly() {
 			getConnectionHolder().setRollbackOnly();
 		}

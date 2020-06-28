@@ -25,6 +25,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * 事务属性实现类
  * TransactionAttribute implementation that works out whether a given exception
  * should cause transaction rollback by applying a number of rollback rules,
  * both positive and negative. If no rules are relevant to the exception, it
@@ -50,6 +51,9 @@ public class RuleBasedTransactionAttribute extends DefaultTransactionAttribute i
 	/** Static for optimal serializability */
 	private static final Log logger = LogFactory.getLog(RuleBasedTransactionAttribute.class);
 
+    /**
+     * 回滚的规则
+     */
 	private List<RollbackRuleAttribute> rollbackRules;
 
 
@@ -120,6 +124,7 @@ public class RuleBasedTransactionAttribute extends DefaultTransactionAttribute i
 
 
 	/**
+	 * 回滚规则
 	 * Winning rule is the shallowest rule (that is, the closest in the
 	 * inheritance hierarchy to the exception). If no rule applies (-1),
 	 * return false.
