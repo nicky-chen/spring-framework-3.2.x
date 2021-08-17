@@ -120,6 +120,8 @@ public abstract class HttpServletBean extends HttpServlet
 
 		// Set bean properties from init parameters.
 		try {
+			// 从init参数设置bean属性。
+			//获得web.xml中的contextConfigLocation配置属性，就是spring MVC的配置文件
 			PropertyValues pvs = new ServletConfigPropertyValues(getServletConfig(), this.requiredProperties);
 			//包装DispatcherServlet，准备放入容器
 			BeanWrapper bw = PropertyAccessorFactory.forBeanPropertyAccess(this);
@@ -127,7 +129,8 @@ public abstract class HttpServletBean extends HttpServlet
             ResourceLoader resourceLoader = new ServletContextResourceLoader(getServletContext());
 			bw.registerCustomEditor(Resource.class, new ResourceEditor(resourceLoader, getEnvironment()));
 			initBeanWrapper(bw);
-			bw.setPropertyValues(pvs, true);
+            //将配置的初始化值设置到DispatcherServlet中
+            bw.setPropertyValues(pvs, true);
 		}
 		catch (BeansException ex) {
 			logger.error("Failed to set bean properties on servlet '" + getServletName() + "'", ex);

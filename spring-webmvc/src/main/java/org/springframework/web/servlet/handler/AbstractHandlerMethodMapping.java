@@ -85,6 +85,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	 * Detects handler methods at initialization.
 	 */
 	public void afterPropertiesSet() {
+		// 初始化句柄方法
 		initHandlerMethods();
 	}
 
@@ -98,13 +99,14 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 		if (logger.isDebugEnabled()) {
 			logger.debug("Looking for request mappings in application context: " + getApplicationContext());
 		}
-
-		String[] beanNames = (this.detectHandlerMethodsInAncestorContexts ?
+        //获取容器中所有的bean
+        String[] beanNames = (this.detectHandlerMethodsInAncestorContexts ?
 				BeanFactoryUtils.beanNamesForTypeIncludingAncestors(getApplicationContext(), Object.class) :
 				getApplicationContext().getBeanNamesForType(Object.class));
 
 		for (String beanName : beanNames) {
-			if (isHandler(getApplicationContext().getType(beanName))){
+            //判断类上有没有@Controller注解或者是@RequestMapping注解
+            if (isHandler(getApplicationContext().getType(beanName))){
 				detectHandlerMethods(beanName);
 			}
 		}
@@ -123,13 +125,14 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	 * @param handler the bean name of a handler or a handler instance
 	 */
 	protected void detectHandlerMethods(final Object handler) {
+	    // 获取类
 		Class<?> handlerType =
 				(handler instanceof String ? getApplicationContext().getType((String) handler) : handler.getClass());
 
 		// Avoid repeated calls to getMappingForMethod which would rebuild RequestMatchingInfo instances
 		final Map<Method, T> mappings = new IdentityHashMap<Method, T>();
 		final Class<?> userType = ClassUtils.getUserClass(handlerType);
-
+		// 有注解的方法筛选
 		Set<Method> methods = HandlerMethodSelector.selectMethods(userType, new MethodFilter() {
 			public boolean matches(Method method) {
 				T mapping = getMappingForMethod(method, userType);

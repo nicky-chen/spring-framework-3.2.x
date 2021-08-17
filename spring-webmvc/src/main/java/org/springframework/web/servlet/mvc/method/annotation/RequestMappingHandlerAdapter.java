@@ -475,14 +475,17 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 
 
 	public void afterPropertiesSet() {
+		// 参数解析器
 		if (this.argumentResolvers == null) {
 			List<HandlerMethodArgumentResolver> resolvers = getDefaultArgumentResolvers();
 			this.argumentResolvers = new HandlerMethodArgumentResolverComposite().addResolvers(resolvers);
 		}
+		// 自定义类型转换器
 		if (this.initBinderArgumentResolvers == null) {
 			List<HandlerMethodArgumentResolver> resolvers = getDefaultInitBinderArgumentResolvers();
 			this.initBinderArgumentResolvers = new HandlerMethodArgumentResolverComposite().addResolvers(resolvers);
 		}
+		// 返回结果解析器
 		if (this.returnValueHandlers == null) {
 			List<HandlerMethodReturnValueHandler> handlers = getDefaultReturnValueHandlers();
 			this.returnValueHandlers = new HandlerMethodReturnValueHandlerComposite().addHandlers(handlers);
@@ -659,16 +662,18 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		}
 
 		// Execute invokeHandlerMethod in synchronized block if required.
+        // 是否session同步
 		if (this.synchronizeOnSession) {
 			HttpSession session = request.getSession(false);
 			if (session != null) {
 				Object mutex = WebUtils.getSessionMutex(session);
+				// 同一个session保证同步串行
 				synchronized (mutex) {
 					return invokeHandleMethod(request, response, handlerMethod);
 				}
 			}
 		}
-
+		// 执行句柄方法
 		return invokeHandleMethod(request, response, handlerMethod);
 	}
 
@@ -745,7 +750,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		if (asyncManager.isConcurrentHandlingStarted()) {
 			return null;
 		}
-
+		// 获取视图对象
 		return getModelAndView(mavContainer, modelFactory, webRequest);
 	}
 

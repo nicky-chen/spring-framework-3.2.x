@@ -81,8 +81,9 @@ public abstract class AbstractNamedValueMethodArgumentResolver implements Handle
 			throws Exception {
 
 		Class<?> paramType = parameter.getParameterType();
+		// 获取@RequestParam上的参数名 默认值
 		NamedValueInfo namedValueInfo = getNamedValueInfo(parameter);
-
+		// 获取参数值
 		Object arg = resolveName(namedValueInfo.name, parameter, webRequest);
 		if (arg == null) {
 			if (namedValueInfo.defaultValue != null) {

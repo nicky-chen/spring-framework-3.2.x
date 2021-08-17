@@ -764,7 +764,8 @@ public class DefaultConversionTests {
 			}
 		});
 		char[] converted = conversionService.convert("abc", char[].class);
-		assertThat(converted, equalTo(new char[] { 'a', 'b', 'c' }));
+
+        assertThat(converted, equalTo(new char[] { 'a', 'b', 'c' }));
 	}
 
 	@Test

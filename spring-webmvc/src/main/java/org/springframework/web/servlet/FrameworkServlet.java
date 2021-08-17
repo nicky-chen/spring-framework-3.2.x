@@ -531,6 +531,7 @@ public abstract class FrameworkServlet extends HttpServletBean {
 			// Either the context is not a ConfigurableApplicationContext with refresh
 			// support or the context injected at construction time had already been
 			// refreshed -> trigger initial onRefresh manually here.
+			// 当 ContextRefreshedEvent 事件没有触发时调用此方法，模板方法，可以在子类重写
 			onRefresh(wac);
 		}
 
@@ -943,20 +944,23 @@ public abstract class FrameworkServlet extends HttpServletBean {
 
 		long startTime = System.currentTimeMillis();
 		Throwable failureCause = null;
-
-		LocaleContext previousLocaleContext = LocaleContextHolder.getLocaleContext();
-		LocaleContext localeContext = buildLocaleContext(request);
-
-		RequestAttributes previousAttributes = RequestContextHolder.getRequestAttributes();
-		ServletRequestAttributes requestAttributes = buildRequestAttributes(request, response, previousAttributes);
+        //获取 LocaleContextHolder 中原来保存的 LocaleContext
+        LocaleContext previousLocaleContext = LocaleContextHolder.getLocaleContext();
+        //获取当前请求的 LocaleContext
+        LocaleContext localeContext = buildLocaleContext(request);
+        //获取 RequestContextHolder 中原来保存的 RequestAttributes
+        RequestAttributes previousAttributes = RequestContextHolder.getRequestAttributes();
+        //获取当前请求的 ServletRequestAttributes
+        ServletRequestAttributes requestAttributes = buildRequestAttributes(request, response, previousAttributes);
 
 		WebAsyncManager asyncManager = WebAsyncUtils.getAsyncManager(request);
 		asyncManager.registerCallableInterceptor(FrameworkServlet.class.getName(), new RequestBindingInterceptor());
-
-		initContextHolders(request, localeContext, requestAttributes);
+        //将当前请求的 LocaleContext 和 ServletRequestAttributes 设置到 LocaleContextHolder 和 RequestContextHolder
+        initContextHolders(request, localeContext, requestAttributes);
 
 		try {
-			doService(request, response);
+            //实际处理请求的入口，这是一个模板方法，在 Dispatcher 类中才有具体实现
+            doService(request, response);
 		}
 		catch (ServletException ex) {
 			failureCause = ex;
